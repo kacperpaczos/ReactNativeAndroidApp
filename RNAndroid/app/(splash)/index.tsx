@@ -1,18 +1,44 @@
 import React, { useEffect, useState, useRef } from 'react';
-import { View, Text, StyleSheet, Animated } from 'react-native';
+import { View, Text, StyleSheet, Animated, Alert } from 'react-native';
 import { useRouter } from 'expo-router';
+import { checkConnection, checkApiConnection } from '../services/api';
+import { useAppContext } from '@/components/AppContext';
 
 export default function SplashScreen() {
   const router = useRouter();
   const [dotCount, setDotCount] = useState(0);
   const colorAnim = useRef(new Animated.Value(0)).current;
+  const { setIsOffline } = useAppContext();
 
   useEffect(() => {
-    const timer = setTimeout(() => {
-      router.replace('/(tabs)');
-    }, 3000);
+    const checkConnectionAndNavigate = async () => {
+      const isConnected = await checkConnection();
+      if (isConnected) {
+        const isApiConnected = await checkApiConnection();
+        if (isApiConnected) {
+          setIsOffline(false);
+          setTimeout(() => {
+            router.replace('/(tabs)');
+          }, 3000);
+        } else {
+          setIsOffline(true);
+          Alert.alert(
+            'Brak połączenia z API',
+            'Nie można połączyć się z serwerem. Aplikacja będzie działać w trybie offline.',
+            [{ text: 'OK', onPress: () => router.replace('/(tabs)') }]
+          );
+        }
+      } else {
+        setIsOffline(true);
+        Alert.alert(
+          'Brak połączenia',
+          'Nie można połączyć się z internetem. Aplikacja będzie działać w trybie offline.',
+          [{ text: 'OK', onPress: () => router.replace('/(tabs)') }]
+        );
+      }
+    };
 
-    return () => clearTimeout(timer);
+    checkConnectionAndNavigate();
   }, []);
 
   useEffect(() => {

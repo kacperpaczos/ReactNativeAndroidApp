@@ -30,7 +30,7 @@ export const CryptoDataProvider: React.FC<{ children: React.ReactNode }> = ({ ch
     const setupDatabase = async () => {
       try {
         console.log('Rozpoczęcie inicjalizacji bazy danych');
-        const database = initDatabase();
+        const database = await initDatabase();
         console.log('Baza danych zainicjalizowana pomyślnie');
         setDb(database);
         await refreshData(database);
@@ -47,7 +47,7 @@ export const CryptoDataProvider: React.FC<{ children: React.ReactNode }> = ({ ch
 
   const refreshData = async (database: SQLite.SQLiteDatabase | null = db) => {
     if (!database) {
-      console.error('Baza danych nie jest dostępna');
+      setError('Baza danych nie jest dostępna');
       return;
     }
 
@@ -56,10 +56,8 @@ export const CryptoDataProvider: React.FC<{ children: React.ReactNode }> = ({ ch
 
     try {
       const apiCoins = await getTopCoinsWithDetails(20);
-      for (const coin of apiCoins) {
-        await insertCoin(database, coin);
-      }
-      const dbCoins = await getCoins(database);
+      await Promise.all(apiCoins.map(coin => insertCoin(database, coin)));
+      const dbCoins = await getCoins(database, 20);
       setCoins(dbCoins);
     } catch (err: any) {
       console.error('Błąd podczas odświeżania danych:', err);

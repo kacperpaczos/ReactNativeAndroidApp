@@ -1,15 +1,15 @@
 import { StyleSheet } from 'react-native';
 import { View } from '@components/Themed';
-import { CryptoList } from '@components/crypto/CryptoList';
-import { CryptoProvider } from '@/contexts/CryptoContext';
+import { NewsList } from '@components/news/NewsList';
+import { ErrorBoundary } from '@components/common/ErrorBoundary';
 
-export default function CryptoScreen() {
+export default function NewsScreen() {
   return (
-    <CryptoProvider>
+    <ErrorBoundary>
       <View style={styles.container}>
-        <CryptoList />
+        <NewsList />
       </View>
-    </CryptoProvider>
+    </ErrorBoundary>
   );
 }
 

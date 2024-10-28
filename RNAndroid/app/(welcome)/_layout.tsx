@@ -1,12 +1,12 @@
 import { Stack } from 'expo-router';
 
-export default function SplashLayout() {
+export default function WelcomeLayout() {
   return (
-    <Stack 
+    <Stack
       screenOptions={{
         headerShown: false,
         animation: 'fade',
-      }} 
+      }}
     />
   );
 }

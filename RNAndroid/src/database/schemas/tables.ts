@@ -1,26 +1,28 @@
 export const TableSchemas = {
     coins: `
       CREATE TABLE IF NOT EXISTS coins (
-        id TEXT PRIMARY KEY,
+        id TEXT PRIMARY KEY NOT NULL,
         name TEXT NOT NULL,
         symbol TEXT NOT NULL,
-        rank INTEGER,
-        price_usd REAL,
-        market_cap_usd REAL,
-        percent_change_24h REAL,
-        last_updated TEXT,
-        created_at TEXT DEFAULT CURRENT_TIMESTAMP
+        rank INTEGER NOT NULL,
+        price_usd REAL NOT NULL,
+        market_cap_usd REAL NOT NULL,
+        percent_change_24h REAL NOT NULL,
+        category TEXT NOT NULL,
+        last_updated TEXT NOT NULL
       )
     `,
     
     news: `
       CREATE TABLE IF NOT EXISTS news (
-        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        id INTEGER PRIMARY KEY NOT NULL,
         title TEXT NOT NULL,
-        content TEXT,
-        published_at TEXT NOT NULL,
-        source TEXT,
-        created_at TEXT DEFAULT CURRENT_TIMESTAMP
+        summary TEXT NOT NULL,
+        source TEXT NOT NULL,
+        date TEXT NOT NULL,
+        url TEXT,
+        image_url TEXT,
+        created_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP
       )
     `,
     

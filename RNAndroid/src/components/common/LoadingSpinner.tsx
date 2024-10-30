@@ -1,20 +1,22 @@
 // components/common/LoadingSpinner.tsx
 import React from 'react';
-import { View, ActivityIndicator, StyleSheet } from 'react-native';
-import { Colors } from '@constants/Colors';
+import { ActivityIndicator, StyleSheet, View } from 'react-native';
+import { useTheme } from '@/hooks/useTheme';
 
 interface LoadingSpinnerProps {
   color?: string;
-  size?: 'small' | 'large';
+  size?: number | 'small' | 'large';
 }
 
 export const LoadingSpinner: React.FC<LoadingSpinnerProps> = ({ 
-  color = Colors.primary, 
-  size = 'large' 
+  size = 'large',
+  color
 }) => {
+  const { colors } = useTheme();
+  
   return (
-    <View style={styles.container}>
-      <ActivityIndicator size={size} color={color} />
+    <View style={[styles.container, { backgroundColor: colors.background.default }]}>
+      <ActivityIndicator size={size} color={color || colors.primary} />
     </View>
   );
 };

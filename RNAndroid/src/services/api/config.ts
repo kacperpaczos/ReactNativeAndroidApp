@@ -22,7 +22,6 @@ api.interceptors.response.use(
 
     if (error.response) {
       apiError.message = error.response.data.message || apiError.message;
-      apiError.code = error.response.data.code;
     } else if (error.request) {
       apiError.message = 'Brak odpowiedzi z serwera';
     }

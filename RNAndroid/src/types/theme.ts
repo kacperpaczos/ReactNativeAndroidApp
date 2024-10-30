@@ -1,34 +1,38 @@
+export type ThemeMode = 'light' | 'dark' | 'system';
+
 export interface ThemeColors {
   primary: string;
-  secondary: string;
-  background: string;
-  surface: string;
+  background: {
+    default: string;
+    secondary: string;
+  };
   text: {
     primary: string;
     secondary: string;
-    disabled: string;
-    hint: string;
+    default: string;
+  };
+  border: string;
+  error: string;
+  button: {
+    primary: {
+      background: string;
+      text: string;
+    }
   };
   crypto: {
     positive: string;
     negative: string;
-    neutral: string;
+    changeBackground: {
+      positive: string;
+      negative: string;
+    }
   };
-  components: {
-    card: {
-      background: string;
-      border: string;
-    };
-    button: {
-      primary: string;
-      secondary: string;
-      disabled: string;
-    };
-    input: {
-      border: string;
-      focus: string;
-      error: string;
-    };
-  };
+  chart: {
+    line: string;
+    gradient: {
+      from: string;
+      to: string;
+    }
+  }
 }
 

@@ -2,35 +2,53 @@ import React, { useEffect } from 'react';
 import { View, StyleSheet } from 'react-native';
 import { useRouter } from 'expo-router';
 import { useAppContext } from '@/contexts/AppContext';
-import { ErrorBoundary } from '@components/common/ErrorBoundary';
+import { CustomErrorBoundary } from '@components/common/ErrorBoundary';
 import { LoadingSpinner } from '@components/common/LoadingSpinner';
-import { Colors } from '@constants/Colors';
+import { useTheme } from '@/hooks/useTheme';
 
 export default function SplashScreen() {
   const router = useRouter();
-  const { isFirstLaunch, isLoading } = useAppContext();
+  const { colors } = useTheme();
+  const { isFirstLaunch, isLoading, isDatabaseReady } = useAppContext();
+
+  console.log('=== SplashScreen stan ===', {
+    isFirstLaunch,
+    isLoading,
+    isDatabaseReady
+  });
 
   useEffect(() => {
-    const initialize = async () => {
+    const navigate = async () => {
+      console.log('=== SplashScreen navigate start ===');
       try {
         await new Promise(resolve => setTimeout(resolve, 1500));
-        if (!isLoading) {
-          router.replace(isFirstLaunch ? '/(welcome)' : '/(tabs)');
+        
+        if (!isLoading && isDatabaseReady) {
+          console.log('=== SplashScreen nawigacja ===', {
+            isFirstLaunch,
+            destination: isFirstLaunch ? '/(welcome)' : '/(tabs)'
+          });
+          
+          if (isFirstLaunch) {
+            router.replace('/(welcome)');
+          } else {
+            router.replace('/(tabs)');
+          }
         }
       } catch (error) {
-        console.error('Błąd podczas inicjalizacji:', error);
+        console.error('=== SplashScreen błąd nawigacji ===', error);
       }
     };
 
-    initialize();
-  }, [isLoading, isFirstLaunch]);
+    navigate();
+  }, [isLoading, isFirstLaunch, isDatabaseReady]);
 
   return (
-    <ErrorBoundary>
-      <View style={styles.container}>
-        <LoadingSpinner color={Colors.primary} />
+    <CustomErrorBoundary>
+      <View style={[styles.container, { backgroundColor: colors.background.default }]}>
+        <LoadingSpinner color={colors.primary} />
       </View>
-    </ErrorBoundary>
+    </CustomErrorBoundary>
   );
 }
 
@@ -39,6 +57,5 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: Colors.background.default,
   },
 });

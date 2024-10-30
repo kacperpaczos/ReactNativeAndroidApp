@@ -3,6 +3,8 @@ export interface CryptoAsset {
     name: string;
     symbol: string;
     rank: number;
+    category: string;
+    last_updated: string;
     quotes: {
       USD: {
         price: number;
@@ -11,7 +13,6 @@ export interface CryptoAsset {
         percent_change_24h: number;
       };
     };
-    lastUpdated: string;
   }
   
   export interface CryptoState {
@@ -19,11 +20,13 @@ export interface CryptoAsset {
     loading: boolean;
     error: string | null;
     isTimeout: boolean;
+    hasMore: boolean;
   }
   
   export interface CryptoContextType extends CryptoState {
-    refreshData: () => Promise<void>;
-    loadMoreAssets: () => Promise<void>;
+    hasMoreItems: boolean;
+    refreshData: () => void;
+    loadMoreAssets: () => void;
   }
   
   export interface PaginationParams {

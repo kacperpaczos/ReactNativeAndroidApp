@@ -27,9 +27,19 @@
       ],
       "@utils/*": [
         "./src/utils/*"
+      ],
+      "@dao/*": [
+        "./src/dao/*"
+      ],
+      "@types/*": [
+        "./src/types/*"
+      ],
+      "@assets/*": [
+        "./assets/*"
       ]
     },
-    "jsx": "react"
+    "jsx": "react",
+    "lib": ["es2015", "dom"]
   },
   "include": [
     "**/*.ts",

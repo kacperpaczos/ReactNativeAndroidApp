@@ -96,13 +96,20 @@ export const formatMarketCap = (value: number | string): string => {
     return 'N/A';
   }
 
-  if (numValue >= 1e12) {
-    return `${formatNumber(numValue / 1e12)} T`;
-  } else if (numValue >= 1e9) {
-    return `${formatNumber(numValue / 1e9)} B`;
-  } else if (numValue >= 1e6) {
-    return `${formatNumber(numValue / 1e6)} M`;
+  if (numValue >= 1e9) {
+    return `$${(numValue / 1e9).toFixed(2)}B`;
   }
-  
-  return formatNumber(numValue);
+  if (numValue >= 1e6) {
+    return `$${(numValue / 1e6).toFixed(2)}M`;
+  }
+  return `$${numValue.toFixed(2)}`;
+};
+
+export const formatPrice = (price: number): string => {
+  return new Intl.NumberFormat('pl-PL', {
+    style: 'currency',
+    currency: 'USD',
+    minimumFractionDigits: 2,
+    maximumFractionDigits: 6
+  }).format(price);
 };

@@ -1,47 +1,51 @@
 import React from 'react';
-import { View, StyleSheet } from 'react-native';
-import { Placeholder } from '../common/Placeholder';
+import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
+import { useTheme } from '@/hooks/useTheme';
 
-export const NewsListPlaceholder = () => {
+interface NewsListPlaceholderProps {
+  onRetry?: () => void;
+}
+
+export const NewsListPlaceholder: React.FC<NewsListPlaceholderProps> = ({ onRetry }) => {
+  const { colors } = useTheme();
+  
   return (
     <View style={styles.container}>
-      {[...Array(5)].map((_, index) => (
-        <View key={index} style={styles.item}>
-          <View style={styles.header}>
-            <Placeholder width="70%" height={20} style={styles.title} />
-            <Placeholder width={80} height={16} style={styles.date} />
-          </View>
-          <Placeholder width="100%" height={40} style={styles.summary} />
-          <Placeholder width={100} height={16} style={styles.source} />
-        </View>
-      ))}
+      <Text style={[styles.message, { color: colors.text }]}>
+        Nie udało się załadować wiadomości
+      </Text>
+      {onRetry && (
+        <TouchableOpacity 
+          style={[styles.button, { backgroundColor: colors.primary }]}
+          onPress={onRetry}
+        >
+          <Text style={styles.buttonText}>Odśwież</Text>
+        </TouchableOpacity>
+      )}
     </View>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
-    padding: 16,
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    padding: 20,
   },
-  item: {
-    marginBottom: 16,
-    padding: 16,
-    backgroundColor: '#fff',
-    borderRadius: 8,
+  message: {
+    fontSize: 16,
+    textAlign: 'center',
+    marginBottom: 20,
   },
-  header: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    marginBottom: 8,
+  button: {
+    paddingVertical: 10,
+    paddingHorizontal: 20,
+    borderRadius: 5,
   },
-  title: {
-    marginBottom: 8,
-  },
-  date: {},
-  summary: {
-    marginBottom: 8,
-  },
-  source: {
-    alignSelf: 'flex-end',
+  buttonText: {
+    color: '#FFFFFF',
+    fontSize: 16,
+    fontWeight: '500',
   },
 });

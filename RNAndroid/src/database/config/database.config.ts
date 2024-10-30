@@ -1,5 +1,5 @@
 export const DatabaseConfig = {
-    name: 'cryptodata3.db',
+    name: 'cryptodata20.db',
     version: '1.0',
     tables: {
       coins: 'coins',

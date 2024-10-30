@@ -1,41 +1,78 @@
-import React from 'react';
-import { View, Text, FlatList, StyleSheet } from 'react-native';
-import useSWR from 'swr';
+import React, { useEffect, useState } from 'react';
+import { View, Text, FlatList, StyleSheet, RefreshControl } from 'react-native';
+import { NewsDao } from '@/dao/NewsDao';
+import { NewsItem } from '@/types';
+import { useTheme } from '@/hooks/useTheme';
+import { LoadingSpinner } from '../common/LoadingSpinner';
+import { NewsListItem } from '../news/NewsListItem';
 
-interface NewsItem {
-  id: number;
-  title: string;
-  // dodaj inne pola według potrzeb
-}
+export const CryptoNews: React.FC = () => {
+  const { colors } = useTheme();
+  const [news, setNews] = useState<NewsItem[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [refreshing, setRefreshing] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
-export const CryptoNews = () => {
-  const { data, error } = useSWR<NewsItem[]>('/api/crypto-news');
+  const newsDao = NewsDao.getInstance();
+
+  const loadNews = async (showLoading = true) => {
+    if (showLoading) setLoading(true);
+    try {
+      const data = await newsDao.getNews();
+      setNews(data);
+      setError(null);
+    } catch (err) {
+      setError('Nie udało się załadować wiadomości');
+      console.error(err);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleRefresh = async () => {
+    setRefreshing(true);
+    await newsDao.refreshData();
+    await loadNews(false);
+    setRefreshing(false);
+  };
+
+  useEffect(() => {
+    loadNews();
+  }, []);
+
+  if (loading && !refreshing) {
+    return <LoadingSpinner />;
+  }
 
   if (error) {
     return (
-      <View style={styles.container}>
-        <Text style={styles.errorText}>Wystąpił błąd: {error.message}</Text>
-      </View>
-    );
-  }
-
-  if (!data) {
-    return (
-      <View style={styles.container}>
-        <Text>Ładowanie...</Text>
+      <View style={[styles.container, { backgroundColor: colors.background.default }]}>
+        <Text style={[styles.errorText, { color: colors.error }]}>
+          {error}
+        </Text>
       </View>
     );
   }
 
   return (
     <FlatList
-      data={data}
+      data={news}
       renderItem={({ item }) => (
-        <View style={styles.newsItem}>
-          <Text style={styles.newsTitle}>{item.title}</Text>
-        </View>
+        <NewsListItem item={item} />
       )}
       keyExtractor={(item) => item.id.toString()}
+      refreshControl={
+        <RefreshControl
+          refreshing={refreshing}
+          onRefresh={handleRefresh}
+          colors={[colors.primary]}
+          tintColor={colors.primary}
+        />
+      }
+      contentContainerStyle={[
+        styles.listContent,
+        { backgroundColor: colors.background.default }
+      ]}
     />
   );
 };
@@ -47,15 +84,12 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   errorText: {
-    color: 'red',
-  },
-  newsItem: {
-    padding: 10,
-    borderBottomWidth: 1,
-    borderBottomColor: '#ccc',
-  },
-  newsTitle: {
     fontSize: 16,
-    fontWeight: 'bold',
+    textAlign: 'center',
+    marginHorizontal: 20,
+  },
+  listContent: {
+    flexGrow: 1,
+    paddingVertical: 8,
   },
 });

@@ -1,8 +1,9 @@
 import React from 'react';
-import { View, Text, StyleSheet, Pressable } from 'react-native';
+import { View, Text, StyleSheet, Pressable, Image } from 'react-native';
 import { useRouter } from 'expo-router';
 import { useAppContext } from '@/contexts/AppContext';
 import { useTheme } from '@/hooks/useTheme';
+import { MotiView } from 'moti';
 
 export const WelcomeScreen = () => {
   const router = useRouter();
@@ -15,22 +16,50 @@ export const WelcomeScreen = () => {
   };
 
   return (
-    <View style={[styles.container, { backgroundColor: colors.background }]}>
+    <View style={[styles.container, { backgroundColor: colors.background.default }]}>
+      <MotiView
+        from={{ translateY: -50, opacity: 0 }}
+        animate={{ translateY: 0, opacity: 1 }}
+        transition={{ type: 'timing', duration: 1000 }}
+      >
+        <Image
+          source={require('@assets/images/welcome.png')}
+          style={styles.image}
+          resizeMode="contain"
+        />
+      </MotiView>
+
       <View style={styles.content}>
-        <Text style={[styles.title, { color: colors.text }]}>
-          Witaj w CryptoNews!
-        </Text>
-        
-        <Text style={[styles.description, { color: colors.text }]}>
-          Śledź aktualne ceny kryptowalut oraz najnowsze wiadomości z rynku crypto.
-        </Text>
-        
-        <Pressable
-          style={[styles.button, { backgroundColor: colors.primary }]}
-          onPress={handleStart}
+        <MotiView
+          from={{ translateY: 50, opacity: 0 }}
+          animate={{ translateY: 0, opacity: 1 }}
+          transition={{ type: 'timing', duration: 800, delay: 300 }}
         >
-          <Text style={styles.buttonText}>Rozpocznij</Text>
-        </Pressable>
+          <Text style={[styles.title, { color: colors.text.default }]}>
+            Witaj w CryptoNews!
+          </Text>
+          
+          <Text style={[styles.description, { color: colors.text.secondary }]}>
+            Śledź aktualne ceny kryptowalut oraz najnowsze wiadomości z rynku crypto w jednym miejscu.
+          </Text>
+        </MotiView>
+
+        <MotiView
+          from={{ scale: 0.8, opacity: 0 }}
+          animate={{ scale: 1, opacity: 1 }}
+          transition={{ type: 'timing', duration: 800, delay: 600 }}
+        >
+          <Pressable
+            style={({ pressed }) => [
+              styles.button,
+              { backgroundColor: colors.primary },
+              pressed && { opacity: 0.8 }
+            ]}
+            onPress={handleStart}
+          >
+            <Text style={styles.buttonText}>Rozpocznij</Text>
+          </Pressable>
+        </MotiView>
       </View>
     </View>
   );
@@ -39,31 +68,38 @@ export const WelcomeScreen = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    justifyContent: 'center',
+  },
+  image: {
+    width: '100%',
+    height: 300,
+    marginBottom: 32,
   },
   content: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    padding: 24,
+    paddingHorizontal: 24,
   },
   title: {
-    fontSize: 24,
+    fontSize: 32,
     fontWeight: 'bold',
-    marginBottom: 24,
+    textAlign: 'center',
+    marginBottom: 16,
   },
   description: {
     fontSize: 16,
     textAlign: 'center',
-    marginBottom: 32,
+    marginBottom: 48,
+    lineHeight: 24,
   },
   button: {
-    paddingVertical: 12,
+    paddingVertical: 16,
     paddingHorizontal: 32,
-    borderRadius: 8,
+    borderRadius: 12,
+    alignItems: 'center',
+    marginHorizontal: 32,
   },
   buttonText: {
     color: '#FFFFFF',
-    fontSize: 16,
+    fontSize: 18,
     fontWeight: 'bold',
   },
 });

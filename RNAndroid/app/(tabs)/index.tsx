@@ -6,9 +6,7 @@ import { CryptoProvider } from '@/contexts/CryptoContext';
 export default function CryptoScreen() {
   return (
     <CryptoProvider>
-      <View style={styles.container}>
-        <CryptoList />
-      </View>
+      <CryptoList />
     </CryptoProvider>
   );
 }

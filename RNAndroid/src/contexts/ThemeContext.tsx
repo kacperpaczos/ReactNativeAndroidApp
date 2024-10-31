@@ -1,6 +1,7 @@
-import React, { createContext, useContext } from 'react';
+import React, { createContext, useContext, useMemo } from 'react';
 import { useColorScheme } from 'react-native';
 import { lightColors, darkColors } from '@/theme/colors';
+import { useAppState } from '@/hooks/useAppState';
 import { ThemeColors } from '@/types/theme';
 
 interface ThemeContextType {
@@ -10,8 +11,20 @@ interface ThemeContextType {
 const ThemeContext = createContext<ThemeContextType | null>(null);
 
 export const ThemeProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  const colorScheme = useColorScheme();
-  const colors = colorScheme === 'dark' ? darkColors : lightColors;
+  const systemColorScheme = useColorScheme();
+  const { userPreferences } = useAppState();
+  
+  const colors = useMemo(() => {
+    switch (userPreferences.darkMode) {
+      case 'light':
+        return lightColors;
+      case 'dark':
+        return darkColors;
+      case 'system':
+      default:
+        return systemColorScheme === 'dark' ? darkColors : lightColors;
+    }
+  }, [userPreferences.darkMode, systemColorScheme]);
 
   return (
     <ThemeContext.Provider value={{ colors }}>

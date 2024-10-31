@@ -4,7 +4,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { Config } from '@constants/Config';
 
 export interface UserPreferences {
-  darkMode: boolean;
+  darkMode: 'light' | 'dark' | 'system';
   refreshInterval: number;
   showWelcomeScreen: boolean;
 }
@@ -21,7 +21,7 @@ const DEFAULT_STATE: AppState = {
   lastUpdateTime: null,
   isFirstLaunch: true,
   userPreferences: {
-    darkMode: false,
+    darkMode: 'system',
     refreshInterval: 300000,
     showWelcomeScreen: true
   }
@@ -32,7 +32,7 @@ export interface AppStateManager {
   lastUpdateTime: string | null;
   isFirstLaunch: boolean;
   userPreferences: {
-    darkMode: boolean;
+    darkMode: 'light' | 'dark' | 'system';
     refreshInterval: number;
   };
   setIsOffline: (value: boolean) => void;

@@ -1,9 +1,22 @@
 import { useColorScheme } from 'react-native';
-import { lightColors as lightTheme, darkColors as darkTheme } from '@/theme/colors';
+import { lightColors, darkColors } from '@/theme/colors';
+import { useAppState } from '@/hooks/useAppState';
 
 export const useTheme = () => {
-  const colorScheme = useColorScheme();
-  const colors = colorScheme === 'dark' ? darkTheme : lightTheme;
+  const systemColorScheme = useColorScheme();
+  const { userPreferences } = useAppState();
   
-  return { colors };
+  const getThemeColors = () => {
+    switch (userPreferences.darkMode) {
+      case 'light':
+        return lightColors;
+      case 'dark':
+        return darkColors;
+      case 'system':
+      default:
+        return systemColorScheme === 'dark' ? darkColors : lightColors;
+    }
+  };
+
+  return { colors: getThemeColors() };
 };

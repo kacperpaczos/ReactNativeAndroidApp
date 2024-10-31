@@ -2,6 +2,7 @@ import React, { useEffect } from 'react';
 import { View, Text, StyleSheet, Switch } from 'react-native';
 import { useTheme } from '@/hooks/useTheme';
 import { useAppState } from '@/hooks/useAppState';
+import { ThemeSelector } from './ThemeSelector';
 
 export const SettingsScreen = () => {
   console.log('=== Renderowanie SettingsScreen ===');
@@ -25,6 +26,12 @@ export const SettingsScreen = () => {
   return (
     <View style={[styles.container, { backgroundColor: colors.background.default }]}>
       <View style={[styles.section, { borderBottomColor: colors.border }]}>
+        <ThemeSelector />
+        
+        <Text style={[styles.notice, { color: colors.text.secondary }]}>
+          Zmiana motywu wymaga ponownego uruchomienia aplikacji
+        </Text>
+        
         <View style={styles.settingItem}>
           <Text style={[styles.settingText, { color: colors.text.primary }]}>
             Ekran powitalny
@@ -77,5 +84,12 @@ const styles = StyleSheet.create({
     fontSize: 14,
     textAlign: 'center',
     marginTop: 24,
+  },
+  notice: {
+    fontSize: 12,
+    textAlign: 'center',
+    marginTop: 8,
+    marginBottom: 16,
+    fontStyle: 'italic',
   },
 });

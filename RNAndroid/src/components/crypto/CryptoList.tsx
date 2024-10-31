@@ -1,119 +1,89 @@
-import React, { useState, useEffect, useCallback } from 'react';
-import { View, FlatList, RefreshControl, StyleSheet } from 'react-native';
-import { CryptoListHeader } from './CryptoListHeader';
+import React, { useState, useCallback } from 'react';
+import { FlatList, RefreshControl } from 'react-native';
+import { useCrypto } from '@/contexts/CryptoContext';
 import { CryptoListItem } from './CryptoListItem';
-import { LoadingSpinner } from '../common/LoadingSpinner';
-import { RetryError } from '../common/RetryError';
+import { CryptoListHeader } from './CryptoListHeader';
+import { CryptoListPlaceholder } from './CryptoListPlaceholder';
+import { LoadingSpinner } from '@/components/common/LoadingSpinner';
 import { useTheme } from '@/hooks/useTheme';
-import { CryptoDao } from '@/dao/CryptoDao';
-import { CryptoAsset } from '@/types/crypto';
-import debounce from 'lodash/debounce';
 
 export const CryptoList: React.FC = () => {
   const { colors } = useTheme();
-  const [assets, setAssets] = useState<CryptoAsset[]>([]);
-  const [loading, setLoading] = useState(true);
+  const { assets, loading, error, refreshData } = useCrypto();
+  const [searchQuery, setSearchQuery] = useState('');
+  const [sortBy, setSortBy] = useState('rank');
+  const [sortDirection, setSortDirection] = useState<'asc' | 'desc'>('asc');
   const [refreshing, setRefreshing] = useState(false);
-  const [error, setError] = useState<string | null>(null);
-  const [searchValue, setSearchValue] = useState('');
-  const [filters, setFilters] = useState({
-    sortBy: 'rank',
-    sortDirection: 'asc' as 'asc' | 'desc'
-  });
-
-  const cryptoDao = CryptoDao.getInstance();
-
-  const debouncedSearch = useCallback(
-    debounce((text: string) => {
-      loadData(true, text, filters.sortBy, filters.sortDirection);
-    }, 300),
-    [filters.sortBy, filters.sortDirection]
-  );
 
   const handleSearch = useCallback((text: string) => {
-    setSearchValue(text);
-    debouncedSearch(text);
-  }, [debouncedSearch]);
-
-  const handleSort = useCallback((sortBy: string, direction: 'asc' | 'desc') => {
-    setFilters({ sortBy, sortDirection: direction });
-    loadData(true, searchValue, sortBy, direction);
-  }, [searchValue]);
-
-  const loadData = useCallback(async (
-    showLoading: boolean,
-    search: string,
-    sortBy: string,
-    sortDirection: 'asc' | 'desc'
-  ) => {
-    if (showLoading) setLoading(true);
-    try {
-      const data = await cryptoDao.getCoins({
-        search,
-        sortBy,
-        sortDirection,
-        limit: 50
-      });
-      setAssets(data);
-      setError(null);
-    } catch (err) {
-      setError('Nie udało się załadować danych');
-      console.error(err);
-    } finally {
-      setLoading(false);
-    }
+    setSearchQuery(text);
   }, []);
 
-  const handleRefresh = useCallback(async () => {
+  const handleSort = useCallback((newSortBy: string, direction: 'asc' | 'desc') => {
+    setSortBy(newSortBy);
+    setSortDirection(direction);
+  }, []);
+
+  const handleRefresh = async () => {
     setRefreshing(true);
-    await loadData(false, searchValue, filters.sortBy, filters.sortDirection);
+    await refreshData();
     setRefreshing(false);
-  }, [searchValue, filters.sortBy, filters.sortDirection]);
-
-  useEffect(() => {
-    loadData(true, searchValue, filters.sortBy, filters.sortDirection);
-  }, []);
+  };
 
   if (loading && !refreshing) {
     return <LoadingSpinner />;
   }
 
   if (error) {
-    return <RetryError message={error} onRetry={handleRefresh} />;
+    return <CryptoListPlaceholder onRetry={refreshData} message={error} />;
   }
 
+  const filteredAssets = assets
+    .filter(asset => 
+      asset.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      asset.symbol.toLowerCase().includes(searchQuery.toLowerCase())
+    )
+    .sort((a, b) => {
+      const direction = sortDirection === 'desc' ? -1 : 1;
+      switch (sortBy) {
+        case 'rank':
+          return (a.rank - b.rank) * direction;
+        case 'price':
+          return ((a.quotes?.USD?.price || 0) - (b.quotes?.USD?.price || 0)) * direction;
+        case 'market_cap':
+          return ((a.quotes?.USD?.market_cap || 0) - (b.quotes?.USD?.market_cap || 0)) * direction;
+        case 'volume_24h':
+          return ((a.quotes?.USD?.volume_24h || 0) - (b.quotes?.USD?.volume_24h || 0)) * direction;
+        case 'percent_change_24h':
+          return ((a.quotes?.USD?.percent_change_24h || 0) - (b.quotes?.USD?.percent_change_24h || 0)) * direction;
+        default:
+          return 0;
+      }
+    });
+
   return (
-    <View style={[styles.container, { backgroundColor: colors.background }]}>
+    <>
       <CryptoListHeader
         onSearch={handleSearch}
         onSort={handleSort}
-        currentSortBy={filters.sortBy}
-        currentSortDirection={filters.sortDirection}
-        defaultSearchValue={searchValue}
+        currentSortBy={sortBy}
+        currentSortDirection={sortDirection}
+        defaultSearchValue={searchQuery}
       />
       <FlatList
-        data={assets}
-        renderItem={({ item }) => (
-          <CryptoListItem 
-            asset={item} 
-            currentSortBy={filters.sortBy}
-          />
-        )}
-        keyExtractor={(item) => item.id}
+        data={filteredAssets}
+        renderItem={({ item }) => <CryptoListItem asset={item} />}
+        keyExtractor={item => item.id.toString()}
         refreshControl={
           <RefreshControl
             refreshing={refreshing}
             onRefresh={handleRefresh}
             colors={[colors.primary]}
+            tintColor={colors.primary}
           />
         }
       />
-    </View>
+    </>
   );
 };
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-  },
-});

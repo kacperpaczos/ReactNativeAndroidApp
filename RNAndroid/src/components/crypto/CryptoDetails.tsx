@@ -13,12 +13,15 @@ export const CryptoDetails: React.FC<CryptoDetailsProps> = ({ asset }) => {
   const { colors } = useTheme();
   const screenWidth = Dimensions.get('window').width;
   
+  // Konwersja koloru z hex na rgba
+  const chartLineColor = '46, 149, 220'; // Odpowiednik #2f95dc w RGB
+  
   const chartConfig = {
     backgroundColor: colors.background.default,
-    backgroundGradientFrom: colors.chart.gradient.from,
-    backgroundGradientTo: colors.chart.gradient.to,
+    backgroundGradientFrom: colors.background.default,
+    backgroundGradientTo: colors.background.default,
     decimalPlaces: 2,
-    color: (opacity = 1) => `rgba(${colors.chart.rgb}, ${opacity})`,
+    color: (opacity = 1) => `rgba(46, 149, 220, ${opacity})`,
     labelColor: () => colors.text.primary,
     style: {
       borderRadius: 16
@@ -26,23 +29,35 @@ export const CryptoDetails: React.FC<CryptoDetailsProps> = ({ asset }) => {
     propsForDots: {
       r: "6",
       strokeWidth: "2",
-      stroke: colors.chart.line
+      stroke: "rgba(46, 149, 220, 1)"
+    },
+    strokeWidth: 2,
+    propsForBackgroundLines: {
+      strokeWidth: 1,
+      stroke: colors.border || 'rgba(0, 0, 0, 0.1)',
+      strokeDasharray: "0",
     }
   };
 
-  const chartData = {
-    labels: ['1h', '2h', '3h', '4h', '5h', '6h'],
-    datasets: [{
-      data: [
-        asset.quotes.USD.price * 0.98,
-        asset.quotes.USD.price * 1.02,
-        asset.quotes.USD.price * 0.99,
-        asset.quotes.USD.price * 1.01,
-        asset.quotes.USD.price * 0.97,
-        asset.quotes.USD.price,
-      ]
-    }]
+  const generateChartData = (basePrice: number) => {
+    const randomVariation = () => 0.95 + Math.random() * 0.1; // Generuje liczby między 0.95 a 1.05
+    
+    return {
+      labels: ['1h', '2h', '3h', '4h', '5h', '6h'],
+      datasets: [{
+        data: Array(6).fill(0).map(() => basePrice * randomVariation())
+      }]
+    };
   };
+
+  const chartData = generateChartData(asset.quotes.USD.price);
+
+  useEffect(() => {
+    console.log('CryptoDetails - aktualizacja danych:', {
+      name: asset.name,
+      price: asset.quotes.USD.price
+    });
+  }, [asset]);
 
   return (
     <ScrollView style={[styles.container, { backgroundColor: colors.background.default }]}>

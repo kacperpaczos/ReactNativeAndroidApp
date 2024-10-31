@@ -1,12 +1,15 @@
+import React from 'react';
+import { View } from 'react-native';
 import { StyleSheet } from 'react-native';
-import { View } from '@components/Themed';
-import { CryptoList } from '@components/crypto/CryptoList';
+import { CryptoList } from '@/components/crypto/CryptoList';
 import { CryptoProvider } from '@/contexts/CryptoContext';
 
-export default function CryptoScreen() {
+export default function TabOneScreen() {
   return (
     <CryptoProvider>
-      <CryptoList />
+      <View style={styles.container}>
+        <CryptoList />
+      </View>
     </CryptoProvider>
   );
 }

@@ -8,6 +8,7 @@ import { useTheme } from '@/hooks/useTheme';
 import { NewsItem } from '@/types';
 
 export const NewsList: React.FC = () => {
+  console.log('=== Renderowanie NewsList ===');
   const { colors } = useTheme();
   const { width } = useWindowDimensions();
   const [news, setNews] = useState<NewsItem[]>([]);
@@ -33,6 +34,7 @@ export const NewsList: React.FC = () => {
   }, [newsDao]);
 
   const handleRefresh = useCallback(async () => {
+    console.log('NewsList - odświeżanie danych');
     setRefreshing(true);
     await newsDao.refreshData();
     await loadNews(false);
@@ -52,7 +54,7 @@ export const NewsList: React.FC = () => {
   }
 
   return (
-    <View style={[styles.container, { backgroundColor: colors.background }]}>
+    <View style={[styles.container, { backgroundColor: colors.background.default }]}>
       <FlatList
         data={news}
         renderItem={({ item }) => <NewsListItem item={item} />}

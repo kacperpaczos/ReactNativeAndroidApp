@@ -27,12 +27,12 @@ export class CryptoDao {
     sortBy?: string;
     sortDirection?: 'asc' | 'desc';
     category?: string;
-  }): Promise<CryptoAsset[]> {
+  } = {}): Promise<CryptoAsset[]> {
     await this.refreshCacheIfNeeded();
     let coins = Array.from(this.cache.values());
 
     // Filtrowanie
-    if (options.search) {
+    if (options?.search) {
       const searchLower = options.search.toLowerCase();
       coins = coins.filter(coin => 
         coin.name.toLowerCase().includes(searchLower) ||
@@ -40,12 +40,12 @@ export class CryptoDao {
       );
     }
 
-    if (options.category && options.category !== 'all') {
+    if (options?.category && options.category !== 'all') {
       coins = coins.filter(coin => coin.category === options.category);
     }
 
     // Sortowanie
-    if (options.sortBy) {
+    if (options?.sortBy) {
       coins.sort((a, b) => {
         const direction = options.sortDirection === 'desc' ? -1 : 1;
         switch (options.sortBy) {
@@ -66,8 +66,8 @@ export class CryptoDao {
     }
 
     // Paginacja
-    const page = options.page || 1;
-    const limit = options.limit || 20;
+    const page = options?.page || 1;
+    const limit = options?.limit || 20;
     const start = (page - 1) * limit;
     return coins.slice(start, start + limit);
   }

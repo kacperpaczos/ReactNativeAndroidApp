@@ -1,20 +1,7 @@
 import { useState, useEffect } from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { DatabaseManager } from '@/database/DatabaseManager';
-
-interface UserPreferences {
-  darkMode: 'light' | 'dark' | 'system';
-  refreshInterval: number;
-  notifications: boolean;
-  showWelcomeScreen: boolean;
-}
-
-const DEFAULT_PREFERENCES: UserPreferences = {
-  darkMode: 'system',
-  refreshInterval: 300000,
-  notifications: false,
-  showWelcomeScreen: true
-};
+import { UserPreferences, DEFAULT_PREFERENCES } from '@/types/appState';
 
 export const useAppState = () => {
   const [isLoading, setIsLoading] = useState(true);

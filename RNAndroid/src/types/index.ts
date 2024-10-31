@@ -4,6 +4,7 @@ export interface NewsItem {
   summary: string;
   date: string;
   source: string;
+  url: string;
 }
 
 export interface Coin {

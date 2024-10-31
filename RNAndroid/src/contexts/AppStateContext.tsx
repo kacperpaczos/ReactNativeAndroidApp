@@ -1,21 +1,7 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { DatabaseManager } from '@/database/DatabaseManager';
-import { ThemeMode } from '@/types/theme';
-
-interface UserPreferences {
-  darkMode: ThemeMode;
-  refreshInterval: number;
-  notifications: boolean;
-  showWelcomeScreen: boolean;
-}
-
-export const DEFAULT_PREFERENCES: UserPreferences = {
-  darkMode: 'system',
-  refreshInterval: 300000,
-  notifications: false,
-  showWelcomeScreen: true
-};
+import { UserPreferences, DEFAULT_PREFERENCES } from '@/types/appState';
 
 interface AppStateContextType {
   isLoading: boolean;
@@ -48,7 +34,7 @@ export const AppStateProvider: React.FC<{ children: React.ReactNode }> = ({ chil
         }
 
         if (storedPreferences) {
-          setUserPreferences(JSON.parse(storedPreferences));
+          setUserPreferences(JSON.parse(storedPreferences) as UserPreferences);
         }
         
         setIsLoading(false);

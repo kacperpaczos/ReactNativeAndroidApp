@@ -2,43 +2,7 @@
 import { useState, useEffect } from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { Config } from '@constants/Config';
-
-export interface UserPreferences {
-  darkMode: 'light' | 'dark' | 'system';
-  refreshInterval: number;
-  showWelcomeScreen: boolean;
-}
-
-export interface AppState {
-  isOffline: boolean;
-  lastUpdateTime: string | null;
-  isFirstLaunch: boolean;
-  userPreferences: UserPreferences;
-}
-
-const DEFAULT_STATE: AppState = {
-  isOffline: false,
-  lastUpdateTime: null,
-  isFirstLaunch: true,
-  userPreferences: {
-    darkMode: 'system',
-    refreshInterval: 300000,
-    showWelcomeScreen: true
-  }
-};
-
-export interface AppStateManager {
-  isOffline: boolean;
-  lastUpdateTime: string | null;
-  isFirstLaunch: boolean;
-  userPreferences: {
-    darkMode: 'light' | 'dark' | 'system';
-    refreshInterval: number;
-  };
-  setIsOffline: (value: boolean) => void;
-  setUserPreferences: (prefs: Partial<UserPreferences>) => Promise<void>;
-  resetState: () => Promise<void>;
-}
+import { AppState, AppStateManager, DEFAULT_STATE } from '@/types/appState';
 
 const useAppStateManager = (): AppStateManager => {
   const [state, setState] = useState<AppState>(DEFAULT_STATE);

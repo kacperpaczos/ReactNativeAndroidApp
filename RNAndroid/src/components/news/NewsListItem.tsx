@@ -2,7 +2,7 @@ import React, { memo } from 'react';
 import { View, Text, StyleSheet, Pressable, Image, Linking } from 'react-native';
 import { MaterialIcons } from '@expo/vector-icons';
 import { useTheme } from '@/hooks/useTheme';
-import { NewsItem } from '@/types';
+import { NewsItem } from '@/types/news';
 import { formatDate } from '@/utils/formatters';
 
 interface NewsListItemProps {
@@ -14,6 +14,8 @@ export const NewsListItem = memo<NewsListItemProps>(({ item }) => {
   const defaultImage = require('@assets/images/news-placeholder.png');
 
   const handlePress = async () => {
+    if (!item.url) return;
+    
     try {
       const canOpen = await Linking.canOpenURL(item.url);
       if (canOpen) {
@@ -31,7 +33,7 @@ export const NewsListItem = memo<NewsListItemProps>(({ item }) => {
       style={({ pressed }) => [
         styles.container,
         { 
-          backgroundColor: colors.surface,
+          backgroundColor: colors.background,
           borderColor: colors.border,
         },
         pressed && styles.pressed

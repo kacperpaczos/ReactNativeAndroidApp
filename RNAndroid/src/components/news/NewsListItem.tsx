@@ -1,5 +1,5 @@
 import React, { memo } from 'react';
-import { View, Text, StyleSheet, Pressable, Image } from 'react-native';
+import { View, Text, StyleSheet, Pressable, Image, Linking } from 'react-native';
 import { MaterialIcons } from '@expo/vector-icons';
 import { useTheme } from '@/hooks/useTheme';
 import { NewsItem } from '@/types';
@@ -7,12 +7,24 @@ import { formatDate } from '@/utils/formatters';
 
 interface NewsListItemProps {
   item: NewsItem;
-  onPress?: () => void;
 }
 
-export const NewsListItem = memo<NewsListItemProps>(({ item, onPress }) => {
+export const NewsListItem = memo<NewsListItemProps>(({ item }) => {
   const { colors } = useTheme();
   const defaultImage = require('@assets/images/news-placeholder.png');
+
+  const handlePress = async () => {
+    try {
+      const canOpen = await Linking.canOpenURL(item.url);
+      if (canOpen) {
+        await Linking.openURL(item.url);
+      } else {
+        console.error('Nie można otworzyć URL:', item.url);
+      }
+    } catch (error) {
+      console.error('Błąd podczas otwierania URL:', error);
+    }
+  };
 
   return (
     <Pressable
@@ -24,7 +36,7 @@ export const NewsListItem = memo<NewsListItemProps>(({ item, onPress }) => {
         },
         pressed && styles.pressed
       ]}
-      onPress={onPress}
+      onPress={handlePress}
     >
       <View style={styles.contentWrapper}>
         <View style={styles.imageContainer}>

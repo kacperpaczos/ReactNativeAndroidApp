@@ -10,6 +10,7 @@ interface CryptoDetailsProps {
 }
 
 export const CryptoDetails: React.FC<CryptoDetailsProps> = ({ asset }) => {
+  console.log('=== Renderowanie CryptoDetails ===', { assetId: asset.id });
   const { colors } = useTheme();
   const screenWidth = Dimensions.get('window').width;
   
@@ -18,7 +19,7 @@ export const CryptoDetails: React.FC<CryptoDetailsProps> = ({ asset }) => {
     backgroundGradientFrom: colors.chart.gradient.from,
     backgroundGradientTo: colors.chart.gradient.to,
     decimalPlaces: 2,
-    color: (opacity = 1) => `rgba(${colors.chart.rgb}, ${opacity})`,
+    color: (opacity = 1) => `rgba(${colors.chart.line}, ${opacity})`,
     labelColor: () => colors.text.primary,
     style: {
       borderRadius: 16
@@ -43,6 +44,13 @@ export const CryptoDetails: React.FC<CryptoDetailsProps> = ({ asset }) => {
       ]
     }]
   };
+
+  useEffect(() => {
+    console.log('CryptoDetails - aktualizacja danych:', {
+      name: asset.name,
+      price: asset.quotes.USD.price
+    });
+  }, [asset]);
 
   return (
     <ScrollView style={[styles.container, { backgroundColor: colors.background.default }]}>

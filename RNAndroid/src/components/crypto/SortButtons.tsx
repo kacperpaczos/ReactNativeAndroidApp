@@ -1,9 +1,13 @@
 import React from 'react';
-import { View, TouchableOpacity, Text, StyleSheet } from 'react-native';
-import { MaterialCommunityIcons } from '@expo/vector-icons';
+import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
+
+interface SortOption {
+  id: string;
+  label: string;
+}
 
 interface SortButtonsProps {
-  options: Array<{ id: string; label: string }>;
+  options: SortOption[];
   currentSortBy: string;
   currentSortDirection: 'asc' | 'desc';
   onSort: (sortBy: string, direction: 'asc' | 'desc') => void;
@@ -15,66 +19,65 @@ export const SortButtons: React.FC<SortButtonsProps> = ({
   currentSortBy,
   currentSortDirection,
   onSort,
-  colors
+  colors,
 }) => {
+  const handleSort = (sortBy: string) => {
+    if (currentSortBy === sortBy) {
+      onSort(sortBy, currentSortDirection === 'asc' ? 'desc' : 'asc');
+    } else {
+      onSort(sortBy, 'asc');
+    }
+  };
+
   return (
-    <View style={styles.sortContainer}>
-      {options.map((option) => (
-        <TouchableOpacity
-          key={option.id}
-          style={[
-            styles.sortButton,
-            currentSortBy === option.id && styles.activeSortButton,
-            { borderColor: colors.border }
-          ]}
-          onPress={() => {
-            const newDirection = currentSortBy === option.id && currentSortDirection === 'asc' ? 'desc' : 'asc';
-            onSort(option.id, newDirection);
-          }}
-        >
-          <Text style={[
-            styles.sortButtonText,
-            { color: currentSortBy === option.id ? colors.primary : colors.text }
-          ]}>
-            {option.label}
-          </Text>
-          {currentSortBy === option.id && (
-            <MaterialCommunityIcons
-              name={currentSortDirection === 'asc' ? 'arrow-up' : 'arrow-down'}
-              size={16}
-              color={colors.primary}
-              style={styles.sortIcon}
-            />
-          )}
-        </TouchableOpacity>
-      ))}
+    <View style={styles.container}>
+      {options.map((option) => {
+        const isActive = currentSortBy === option.id;
+        return (
+          <TouchableOpacity
+            key={option.id}
+            style={[
+              styles.button,
+              { 
+                backgroundColor: isActive ? colors.primary : 'transparent',
+                borderColor: isActive ? colors.primary : colors.text.secondary,
+              }
+            ]}
+            onPress={() => handleSort(option.id)}
+          >
+            <Text
+              style={[
+                styles.buttonText,
+                { 
+                  color: isActive ? colors.button.primary.text : colors.text.secondary,
+                }
+              ]}
+            >
+              {option.label}
+              {isActive && (currentSortDirection === 'asc' ? ' ↑' : ' ↓')}
+            </Text>
+          </TouchableOpacity>
+        );
+      })}
     </View>
   );
 };
 
 const styles = StyleSheet.create({
-  sortContainer: {
+  container: {
     flexDirection: 'row',
     flexWrap: 'wrap',
     gap: 8,
-    marginTop: 8,
+    padding: 8,
   },
-  sortButton: {
-    flexDirection: 'row',
-    alignItems: 'center',
+  button: {
     paddingHorizontal: 12,
     paddingVertical: 6,
     borderRadius: 16,
     borderWidth: 1,
   },
-  activeSortButton: {
-    backgroundColor: 'rgba(33, 150, 243, 0.1)',
-  },
-  sortButtonText: {
+  buttonText: {
     fontSize: 14,
     fontWeight: '500',
   },
-  sortIcon: {
-    marginLeft: 4,
-  }
 });

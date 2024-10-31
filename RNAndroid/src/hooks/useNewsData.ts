@@ -2,9 +2,9 @@ import { useState, useEffect } from 'react';
 import { getLatestNews } from '@services/api/news';
 import { NewsItem } from '@/types';
 import { useNetwork } from './useNetwork';
-import { useAppContext } from '@/contexts/AppContext';
 
-const LOADING_TIMEOUT = 5000; // 5 sekund
+const REFRESH_INTERVAL = 300000; // 5 minut
+const LOADING_TIMEOUT = 5000;
 
 export const useNewsData = () => {
   const [news, setNews] = useState<NewsItem[]>([]);
@@ -12,7 +12,6 @@ export const useNewsData = () => {
   const [error, setError] = useState<string | null>(null);
   const [isTimeout, setIsTimeout] = useState(false);
   const { isConnected } = useNetwork();
-  const { userPreferences } = useAppContext();
 
   const refreshNews = async () => {
     if (!isConnected) {
@@ -48,10 +47,10 @@ export const useNewsData = () => {
       if (isConnected) {
         refreshNews();
       }
-    }, userPreferences.refreshInterval);
+    }, REFRESH_INTERVAL);
 
     return () => clearInterval(interval);
-  }, [isConnected, userPreferences.refreshInterval]);
+  }, [isConnected]);
 
   return {
     news,

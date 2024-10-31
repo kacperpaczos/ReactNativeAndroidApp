@@ -1,42 +1,22 @@
 import React, { useEffect } from 'react';
-import { View, StyleSheet } from 'react-native';
+import { View, StyleSheet, Image } from 'react-native';
 import { useRouter } from 'expo-router';
-import { useAppContext } from '@/contexts/AppContext';
-import { CustomErrorBoundary } from '@components/common/ErrorBoundary';
+import { useAppState } from '@/hooks/useAppState';
 import { LoadingSpinner } from '@components/common/LoadingSpinner';
 import { useTheme } from '@/hooks/useTheme';
+import { MotiView } from 'moti';
 
 export default function SplashScreen() {
   const router = useRouter();
   const { colors } = useTheme();
-  const { isFirstLaunch, isLoading, isDatabaseReady } = useAppContext();
-
-  console.log('=== SplashScreen stan ===', {
-    isFirstLaunch,
-    isLoading,
-    isDatabaseReady
-  });
+  const { isLoading, isFirstLaunch, isDatabaseReady } = useAppState();
 
   useEffect(() => {
     const navigate = async () => {
-      console.log('=== SplashScreen navigate start ===');
-      try {
+      if (!isLoading && isDatabaseReady) {
         await new Promise(resolve => setTimeout(resolve, 1500));
-        
-        if (!isLoading && isDatabaseReady) {
-          console.log('=== SplashScreen nawigacja ===', {
-            isFirstLaunch,
-            destination: isFirstLaunch ? '/(welcome)' : '/(tabs)'
-          });
-          
-          if (isFirstLaunch) {
-            router.replace('/(welcome)');
-          } else {
-            router.replace('/(tabs)');
-          }
-        }
-      } catch (error) {
-        console.error('=== SplashScreen błąd nawigacji ===', error);
+        const destination = isFirstLaunch ? '/(welcome)' : '/(tabs)';
+        router.replace(destination);
       }
     };
 
@@ -44,11 +24,20 @@ export default function SplashScreen() {
   }, [isLoading, isFirstLaunch, isDatabaseReady]);
 
   return (
-    <CustomErrorBoundary>
-      <View style={[styles.container, { backgroundColor: colors.background.default }]}>
-        <LoadingSpinner color={colors.primary} />
-      </View>
-    </CustomErrorBoundary>
+    <View style={[styles.container, { backgroundColor: colors?.background?.default }]}>
+      <MotiView 
+        from={{ scale: 0.8, opacity: 0 }}
+        animate={{ scale: 1, opacity: 1 }}
+        transition={{ type: 'timing', duration: 1000 }}
+      >
+        <Image
+          source={require('@assets/images/logo.png')}
+          style={styles.logo}
+          resizeMode="contain"
+        />
+      </MotiView>
+      <LoadingSpinner color={colors?.primary} />
+    </View>
   );
 }
 
@@ -57,5 +46,11 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
+    backgroundColor: '#FFFFFF',
+  },
+  logo: {
+    width: 150,
+    height: 150,
+    marginBottom: 40,
   },
 });

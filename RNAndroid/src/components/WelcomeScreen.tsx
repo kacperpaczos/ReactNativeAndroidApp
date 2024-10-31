@@ -1,17 +1,28 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { View, Text, StyleSheet, Pressable, Image } from 'react-native';
 import { useRouter } from 'expo-router';
-import { useAppContext } from '@/contexts/AppContext';
+import { useAppState } from '@/hooks/useAppState';
 import { useTheme } from '@/hooks/useTheme';
 import { MotiView } from 'moti';
 
 export const WelcomeScreen = () => {
+  console.log('=== Renderowanie WelcomeScreen ===');
   const router = useRouter();
-  const { setIsFirstLaunch } = useAppContext();
+  const { setFirstLaunch } = useAppState();
   const { colors } = useTheme();
 
+  useEffect(() => {
+    console.log('WelcomeScreen - inicjalizacja');
+  }, []);
+
+  if (!colors) {
+    return null; // lub komponent ładowania
+  }
+
   const handleStart = async () => {
-    await setIsFirstLaunch(false);
+    console.log('WelcomeScreen - kliknięcie przycisku Start');
+    await setFirstLaunch(false);
+    console.log('WelcomeScreen - przekierowanie do (tabs)');
     router.replace('/(tabs)');
   };
 

@@ -5,11 +5,15 @@ import { DatabaseManager } from '@/database/DatabaseManager';
 interface UserPreferences {
   darkMode: boolean;
   refreshInterval: number;
+  notifications: boolean;
+  showWelcomeScreen: boolean;
 }
 
 const DEFAULT_PREFERENCES: UserPreferences = {
   darkMode: false,
-  refreshInterval: 300000 // 5 minut
+  refreshInterval: 300000,
+  notifications: false,
+  showWelcomeScreen: true
 };
 
 export const useAppState = () => {

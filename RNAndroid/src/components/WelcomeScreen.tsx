@@ -10,13 +10,21 @@ export const WelcomeScreen = () => {
   const router = useRouter();
   const { setFirstLaunch } = useAppState();
   const { colors } = useTheme();
+  const { userPreferences } = useAppState();
 
   useEffect(() => {
-    console.log('WelcomeScreen - inicjalizacja');
-  }, []);
+    const checkWelcomeScreen = async () => {
+      if (!userPreferences.showWelcomeScreen) {
+        await setFirstLaunch(false);
+        router.replace('/(tabs)');
+      }
+    };
+
+    checkWelcomeScreen();
+  }, [userPreferences.showWelcomeScreen]);
 
   if (!colors) {
-    return null; // lub komponent ładowania
+    return null;
   }
 
   const handleStart = async () => {

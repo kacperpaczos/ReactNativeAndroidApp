@@ -6,6 +6,7 @@ import { Config } from '@constants/Config';
 export interface UserPreferences {
   darkMode: boolean;
   refreshInterval: number;
+  showWelcomeScreen: boolean;
 }
 
 export interface AppState {
@@ -21,7 +22,8 @@ const DEFAULT_STATE: AppState = {
   isFirstLaunch: true,
   userPreferences: {
     darkMode: false,
-    refreshInterval: 300000 // 5 minut w milisekundach
+    refreshInterval: 300000,
+    showWelcomeScreen: true
   }
 };
 

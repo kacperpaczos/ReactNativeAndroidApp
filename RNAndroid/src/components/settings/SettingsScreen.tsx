@@ -17,9 +17,25 @@ export const SettingsScreen = () => {
     updateUserPreferences({ ...userPreferences, notifications: value });
   };
 
+  const toggleWelcomeScreen = (value: boolean) => {
+    console.log('SettingsScreen - zmiana ekranu powitalnego:', value);
+    updateUserPreferences({ ...userPreferences, showWelcomeScreen: value });
+  };
+
   return (
     <View style={[styles.container, { backgroundColor: colors.background.default }]}>
       <View style={[styles.section, { borderBottomColor: colors.border }]}>
+        <View style={styles.settingItem}>
+          <Text style={[styles.settingText, { color: colors.text.primary }]}>
+            Ekran powitalny
+          </Text>
+          <Switch
+            value={userPreferences?.showWelcomeScreen ?? true}
+            onValueChange={toggleWelcomeScreen}
+            trackColor={{ false: colors.border, true: colors.primary }}
+          />
+        </View>
+
         <View style={styles.settingItem}>
           <Text style={[styles.settingText, { color: colors.text.primary }]}>
             Powiadomienia
@@ -44,8 +60,8 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   section: {
+    paddingVertical: 16,
     borderBottomWidth: 1,
-    paddingVertical: 8,
   },
   settingItem: {
     flexDirection: 'row',
@@ -58,9 +74,8 @@ const styles = StyleSheet.create({
     fontSize: 16,
   },
   version: {
-    textAlign: 'center',
-    marginTop: 'auto',
-    marginBottom: 20,
     fontSize: 14,
+    textAlign: 'center',
+    marginTop: 24,
   },
 });

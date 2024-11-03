@@ -3,6 +3,7 @@ import { View, StyleSheet } from 'react-native';
 import { useTheme } from '@/hooks/useTheme';
 import { SearchBar } from './SearchBar';
 import { SortButtons } from './SortButtons';
+import { useTranslation } from 'react-i18next';
 
 interface CryptoListHeaderProps {
   onSearch: (text: string) => void;
@@ -28,6 +29,7 @@ export const CryptoListHeader: React.FC<CryptoListHeaderProps> = ({
   defaultSearchValue = ''
 }) => {
   const { colors, themeVersion } = useTheme();
+  const { t } = useTranslation();
 
   useEffect(() => {
     console.log('CryptoListHeader - zmiana motywu, themeVersion:', themeVersion);
@@ -36,6 +38,14 @@ export const CryptoListHeader: React.FC<CryptoListHeaderProps> = ({
   const handleSearch = useCallback((text: string) => {
     onSearch(text);
   }, [onSearch]);
+
+  const columns = [
+    { id: 'rank', label: t('sorting.rank') },
+    { id: 'price_usd', label: t('sorting.price_usd') },
+    { id: 'market_cap_usd', label: t('sorting.market_cap_usd') },
+    { id: 'volume_24h_usd', label: t('sorting.volume_24h_usd') },
+    { id: 'percent_change_24h', label: t('sorting.percent_change_24h') }
+  ];
 
   return (
     <View style={[styles.container, { backgroundColor: colors.background.secondary }]}>

@@ -3,6 +3,7 @@ import { View, Text, StyleSheet, Pressable } from 'react-native';
 import { useTheme } from '@/hooks/useTheme';
 import { useRouter } from 'expo-router';
 import { CryptoAsset } from '@/types/crypto';
+import { useTranslation } from 'react-i18next';
 
 interface CryptoListItemProps {
   asset: CryptoAsset;
@@ -12,6 +13,7 @@ interface CryptoListItemProps {
 export const CryptoListItem: React.FC<CryptoListItemProps> = React.memo(({ asset, currentSortBy }) => {
   const { colors } = useTheme();
   const router = useRouter();
+  const { t } = useTranslation();
 
   if (!asset.rank || !asset.category || !asset.last_updated) {
     console.warn('Brakujące wymagane pola w asset:', {
@@ -51,7 +53,7 @@ export const CryptoListItem: React.FC<CryptoListItemProps> = React.memo(({ asset
       </View>
       <View style={styles.priceContainer}>
         <Text style={[styles.price, { color: colors.text.primary }]}>
-          ${asset.quotes.USD.price.toFixed(2)}
+          {t('crypto.price')}: ${asset.quotes.USD.price.toFixed(2)}
         </Text>
         <Text
           style={[
@@ -59,7 +61,7 @@ export const CryptoListItem: React.FC<CryptoListItemProps> = React.memo(({ asset
             { color: asset.quotes.USD.percent_change_24h >= 0 ? colors.crypto.positive : colors.crypto.negative }
           ]}
         >
-          {asset.quotes.USD.percent_change_24h >= 0 ? '+' : ''}
+          {t('crypto.change24h')}: {asset.quotes.USD.percent_change_24h >= 0 ? '+' : ''}
           {asset.quotes.USD.percent_change_24h.toFixed(2)}%
         </Text>
       </View>

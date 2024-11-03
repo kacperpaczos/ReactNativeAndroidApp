@@ -43,15 +43,14 @@ const pl: TranslationKeys = {
   news: {
     title: 'Wiadomości',
     loadError: 'Nie udało się załadować wiadomości',
-    empty: 'Brak dostępnych wiadomości',
+    empty: 'Brak dostępnych wiadomo��ci',
     readMore: 'Czytaj więcej',
     source: 'Źródło',
     date: 'Data'
   },
   welcome: {
-    title: 'Witaj w CryptoNews',
-    subtitle: 'Śledź kryptowaluty i bądź na bieżąco z najnowszymi wiadomościami',
-    start: 'Rozpocznij'
+    title: 'Witaj w CryptoNews!',
+    description: 'Śledź aktualne ceny kryptowalut oraz najnowsze wiadomości z rynku crypto w jednym miejscu.'
   },
   modals: {
     appInfo: {
@@ -83,6 +82,17 @@ const pl: TranslationKeys = {
         global: 'Globalny zasięg'
       }
     }
+  },
+  sorting: {
+    rank: 'Ranking',
+    price_usd: 'Cena',
+    market_cap_usd: 'Kapitalizacja',
+    volume_24h_usd: 'Wolumen 24h',
+    percent_change_24h: 'Zmiana 24h'
+  },
+  cryptoDetails: {
+    marketCap: 'Kapitalizacja rynkowa',
+    volume24h: 'Wolumen (24h)'
   }
 };
 

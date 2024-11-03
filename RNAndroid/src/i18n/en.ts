@@ -8,7 +8,8 @@ const en: TranslationKeys = {
     close: 'Close',
     save: 'Save',
     cancel: 'Cancel',
-    refresh: 'Refresh'
+    refresh: 'Refresh',
+    version: 'Version'
   },
   crypto: {
     price: 'Price',
@@ -36,8 +37,7 @@ const en: TranslationKeys = {
       notice: 'Theme change requires app restart'
     },
     notifications: 'Notifications',
-    welcomeScreen: 'Welcome Screen',
-    version: 'Version'
+    welcomeScreen: 'Welcome Screen'
   },
   news: {
     title: 'News',
@@ -48,19 +48,26 @@ const en: TranslationKeys = {
     date: 'Date'
   },
   welcome: {
-    title: 'Welcome to CryptoNews',
-    subtitle: 'Track cryptocurrencies and stay updated with the latest news',
-    start: 'Get Started'
+    title: 'Welcome to CryptoNews!',
+    description: 'Track current cryptocurrency prices and latest crypto market news in one place.'
   },
   modals: {
     appInfo: {
       title: 'About CryptoNews',
       description: 'Your comprehensive cryptocurrency tracking and news application',
       features: {
-        title: 'Key Features',
-        tracking: 'Real-time price tracking',
-        news: 'Latest crypto news',
-        notifications: 'Price alerts'
+        prices: {
+          title: 'Current Prices',
+          description: 'Track cryptocurrency prices in real-time'
+        },
+        news: {
+          title: 'News',
+          description: 'Latest updates from the crypto world'
+        },
+        notifications: {
+          title: 'Notifications',
+          description: 'Receive alerts about important changes'
+        }
       }
     },
     cryptoInfo: {
@@ -74,6 +81,17 @@ const en: TranslationKeys = {
         global: 'Global reach'
       }
     }
+  },
+  sorting: {
+    rank: 'Rank',
+    price_usd: 'Price',
+    market_cap_usd: 'Market Cap',
+    volume_24h_usd: '24h Volume',
+    percent_change_24h: '24h Change'
+  },
+  cryptoDetails: {
+    marketCap: 'Market Cap',
+    volume24h: 'Volume (24h)'
   }
 };
 

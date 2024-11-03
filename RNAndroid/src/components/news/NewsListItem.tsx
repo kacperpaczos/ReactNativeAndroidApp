@@ -4,6 +4,7 @@ import { MaterialIcons } from '@expo/vector-icons';
 import { useTheme } from '@/hooks/useTheme';
 import { NewsItem } from '@/types/news';
 import { formatDate } from '@/utils/formatters';
+import { useTranslation } from 'react-i18next';
 
 interface NewsListItemProps {
   item: NewsItem;
@@ -31,6 +32,7 @@ const NewsFooterItem = ({ icon, text, color }: NewsFooterItemProps) => (
 
 export const NewsListItem = memo<NewsListItemProps>(({ item }) => {
   const { colors, themeVersion } = useTheme();
+  const { t } = useTranslation();
   const defaultImage = require('@assets/images/news-placeholder.png');
 
   const handlePress = async () => {
@@ -77,12 +79,12 @@ export const NewsListItem = memo<NewsListItemProps>(({ item }) => {
       <View style={styles.footer}>
         <NewsFooterItem 
           icon="public"
-          text={item.source}
+          text={t('news.source')}: {item.source}
           color={colors.text.secondary}
         />
         <NewsFooterItem
           icon="access-time" 
-          text={formatDate(item.date)}
+          text={t('news.date')}: {formatDate(item.date)}
           color={colors.text.secondary}
         />
       </View>

@@ -5,6 +5,7 @@ export interface NewsItem {
   date: string;
   source: string;
   url: string;
+  imageUrl: string;
 }
 
 export interface Coin {

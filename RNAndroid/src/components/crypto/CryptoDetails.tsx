@@ -1,56 +1,100 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect } from 'react';
 import { View, Text, StyleSheet, ScrollView, Dimensions } from 'react-native';
 import { LineChart } from 'react-native-chart-kit';
 import { useTheme } from '@/hooks/useTheme';
 import { CryptoAsset } from '@/types/crypto';
 import { formatPrice, formatPercentage, formatMarketCap } from '@/utils/formatters';
+import { ThemeAwareLayout } from '@/components/layouts/ThemeAwareLayout';
+import { ThemeColors } from '@/types/theme';
 
 interface CryptoDetailsProps {
   asset: CryptoAsset;
 }
 
+const generateChartData = (basePrice: number) => {
+  const randomVariation = () => 0.95 + Math.random() * 0.1;
+  
+  return {
+    labels: ['1h', '2h', '3h', '4h', '5h', '6h'],
+    datasets: [{
+      data: Array(6).fill(0).map(() => basePrice * randomVariation())
+    }]
+  };
+};
+
+const getChartConfig = (colors: any) => ({
+  backgroundColor: colors.background.default,
+  backgroundGradientFrom: colors.background.default,
+  backgroundGradientTo: colors.background.default,
+  decimalPlaces: 2,
+  color: (opacity = 1) => `rgba(46, 149, 220, ${opacity})`,
+  labelColor: () => colors.text.primary,
+  style: {
+    borderRadius: 16
+  },
+  propsForDots: {
+    r: "6",
+    strokeWidth: "2", 
+    stroke: "rgba(46, 149, 220, 1)"
+  },
+  strokeWidth: 2,
+  propsForBackgroundLines: {
+    strokeWidth: 1,
+    stroke: colors.border || 'rgba(0, 0, 0, 0.1)',
+    strokeDasharray: "0",
+  }
+});
+
+const PriceHeader: React.FC<{asset: CryptoAsset, colors: ThemeColors}> = ({asset, colors}) => (
+  <View style={styles.header}>
+    <Text style={[styles.name, { color: colors.text.primary }]}>
+      {asset.name} ({asset.symbol})
+    </Text>
+    <Text style={[styles.price, { color: colors.text.primary }]}>
+      ${asset.quotes.USD.price.toFixed(2)}
+    </Text>
+    <Text
+      style={[
+        styles.change,
+        { 
+          color: asset.quotes.USD.percent_change_24h >= 0 
+            ? colors.crypto.positive 
+            : colors.crypto.negative 
+        }
+      ]}
+    >
+      {asset.quotes.USD.percent_change_24h >= 0 ? '+' : ''}
+      {asset.quotes.USD.percent_change_24h.toFixed(2)}%
+    </Text>
+  </View>
+);
+
+const StatsSection: React.FC<{asset: CryptoAsset, colors: any}> = ({asset, colors}) => (
+  <View style={[styles.statsContainer, { borderColor: colors.border }]}>
+    <View style={styles.statRow}>
+      <Text style={[styles.statLabel, { color: colors.text.secondary }]}>
+        Kapitalizacja rynkowa
+      </Text>
+      <Text style={[styles.statValue, { color: colors.text.primary }]}>
+        ${formatMarketCap(asset.quotes.USD.market_cap)}
+      </Text>
+    </View>
+    <View style={styles.statRow}>
+      <Text style={[styles.statLabel, { color: colors.text.secondary }]}>
+        Wolumen (24h)
+      </Text>
+      <Text style={[styles.statValue, { color: colors.text.primary }]}>
+        ${formatMarketCap(asset.quotes.USD.volume_24h)}
+      </Text>
+    </View>
+  </View>
+);
+
 export const CryptoDetails: React.FC<CryptoDetailsProps> = ({ asset }) => {
-  const { colors } = useTheme();
+  const { colors, themeVersion } = useTheme();
   const screenWidth = Dimensions.get('window').width;
-  
-  // Konwersja koloru z hex na rgba
-  const chartLineColor = '46, 149, 220'; // Odpowiednik #2f95dc w RGB
-  
-  const chartConfig = {
-    backgroundColor: colors.background.default,
-    backgroundGradientFrom: colors.background.default,
-    backgroundGradientTo: colors.background.default,
-    decimalPlaces: 2,
-    color: (opacity = 1) => `rgba(46, 149, 220, ${opacity})`,
-    labelColor: () => colors.text.primary,
-    style: {
-      borderRadius: 16
-    },
-    propsForDots: {
-      r: "6",
-      strokeWidth: "2",
-      stroke: "rgba(46, 149, 220, 1)"
-    },
-    strokeWidth: 2,
-    propsForBackgroundLines: {
-      strokeWidth: 1,
-      stroke: colors.border || 'rgba(0, 0, 0, 0.1)',
-      strokeDasharray: "0",
-    }
-  };
-
-  const generateChartData = (basePrice: number) => {
-    const randomVariation = () => 0.95 + Math.random() * 0.1; // Generuje liczby między 0.95 a 1.05
-    
-    return {
-      labels: ['1h', '2h', '3h', '4h', '5h', '6h'],
-      datasets: [{
-        data: Array(6).fill(0).map(() => basePrice * randomVariation())
-      }]
-    };
-  };
-
   const chartData = generateChartData(asset.quotes.USD.price);
+  const chartConfig = getChartConfig(colors);
 
   useEffect(() => {
     console.log('CryptoDetails - aktualizacja danych:', {
@@ -59,68 +103,31 @@ export const CryptoDetails: React.FC<CryptoDetailsProps> = ({ asset }) => {
     });
   }, [asset]);
 
+  useEffect(() => {
+    console.log('CryptoDetails - zmiana motywu, themeVersion:', themeVersion);
+  }, [themeVersion]);
+
   return (
-    <ScrollView style={[styles.container, { backgroundColor: colors.background.default }]}>
-      <View style={styles.header}>
-        <Text style={[styles.symbol, { color: colors.text.primary }]}>
-          {asset.symbol}
-        </Text>
-        <Text style={[styles.name, { color: colors.text.secondary }]}>
-          {asset.name}
-        </Text>
-      </View>
+    <ThemeAwareLayout>
+      <ScrollView 
+        style={[styles.container, { backgroundColor: colors.background.default }]}
+      >
+        <PriceHeader asset={asset} colors={colors} />
 
-      <View style={styles.priceContainer}>
-        <Text style={[styles.price, { color: colors.text.primary }]}>
-          {formatPrice(asset.quotes.USD.price)}
-        </Text>
-        <Text style={[
-          styles.change,
-          { color: asset.quotes.USD.percent_change_24h >= 0 
-            ? colors.crypto.positive 
-            : colors.crypto.negative 
-          }
-        ]}>
-          {formatPercentage(asset.quotes.USD.percent_change_24h)}
-        </Text>
-      </View>
-
-      <View style={styles.chartContainer}>
-        <LineChart
-          data={chartData}
-          width={screenWidth - 32}
-          height={220}
-          chartConfig={chartConfig}
-          bezier
-          style={styles.chart}
-          withDots={true}
-          withInnerLines={false}
-          withOuterLines={true}
-          withVerticalLines={false}
-          withHorizontalLines={true}
-        />
-      </View>
-
-      <View style={styles.statsContainer}>
-        <View style={styles.statItem}>
-          <Text style={[styles.statLabel, { color: colors.text.secondary }]}>
-            Kapitalizacja rynkowa
-          </Text>
-          <Text style={[styles.statValue, { color: colors.text.primary }]}>
-            {formatMarketCap(asset.quotes.USD.market_cap)}
-          </Text>
+        <View style={styles.chartContainer}>
+          <LineChart
+            data={chartData}
+            width={screenWidth - 32}
+            height={220}
+            chartConfig={chartConfig}
+            bezier
+            style={styles.chart}
+          />
         </View>
-        
-        <View style={styles.statItem}>
-          <Text style={[styles.statLabel, { color: colors.text.secondary }]}>
-            Wolumen 24h
-          </Text>
-          <Text style={[styles.statValue, { color: colors.text.primary }]}>
-            {formatMarketCap(asset.quotes.USD.volume_24h)}
-          </Text>
-        </View>
-      </View>
-    </ScrollView>
+
+        <StatsSection asset={asset} colors={colors} />
+      </ScrollView>
+    </ThemeAwareLayout>
   );
 };
 
@@ -132,18 +139,9 @@ const styles = StyleSheet.create({
   header: {
     marginBottom: 16,
   },
-  symbol: {
+  name: {
     fontSize: 24,
     fontWeight: 'bold',
-  },
-  name: {
-    fontSize: 16,
-    marginTop: 4,
-  },
-  priceContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    marginBottom: 24,
   },
   price: {
     fontSize: 32,
@@ -165,7 +163,9 @@ const styles = StyleSheet.create({
   statsContainer: {
     marginTop: 16,
   },
-  statItem: {
+  statRow: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
     marginBottom: 16,
   },
   statLabel: {

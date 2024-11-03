@@ -4,6 +4,7 @@ import { Tabs } from 'expo-router';
 import { useTheme } from '@/hooks/useTheme';
 import { HeaderInfoButton } from '@/components/common/HeaderInfoButton';
 import { AppInfoModal } from '@/components/modals/AppInfoModal';
+import { ThemeAwareLayout } from '@/components/layouts/ThemeAwareLayout';
 
 function TabBarIcon(props: {
   name: React.ComponentProps<typeof FontAwesome>['name'];
@@ -15,13 +16,29 @@ function TabBarIcon(props: {
 export default function TabLayout() {
   const { colors } = useTheme();
 
+  if (!colors?.background?.default || !colors?.text?.primary) {
+    return null;
+  }
+
   return (
-    <>
+    <ThemeAwareLayout>
       <Tabs
         screenOptions={{
           headerShown: true,
-          tabBarActiveTintColor: colors?.primary,
-          headerRight: () => <HeaderInfoButton />
+          tabBarActiveTintColor: colors.primary,
+          tabBarInactiveTintColor: colors.text.secondary,
+          tabBarStyle: {
+            backgroundColor: colors.background.default,
+            borderTopColor: colors.border,
+          },
+          headerStyle: {
+            backgroundColor: colors.background.default,
+          },
+          headerTintColor: colors.text.primary,
+          headerRight: () => <HeaderInfoButton />,
+          tabBarLabelStyle: {
+            fontSize: 12,
+          },
         }}
       >
         <Tabs.Screen
@@ -47,6 +64,6 @@ export default function TabLayout() {
         />
       </Tabs>
       <AppInfoModal />
-    </>
+    </ThemeAwareLayout>
   );
 }

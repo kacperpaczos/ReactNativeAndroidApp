@@ -1,4 +1,4 @@
-import React, { useState, useCallback } from 'react';
+import React, { useCallback, useEffect } from 'react';
 import { View, StyleSheet } from 'react-native';
 import { useTheme } from '@/hooks/useTheme';
 import { SearchBar } from './SearchBar';
@@ -14,21 +14,25 @@ interface CryptoListHeaderProps {
 
 const SORT_OPTIONS = [
   { id: 'rank', label: 'Ranking' },
-  { id: 'price', label: 'Cena' },
-  { id: 'market_cap', label: 'Kapitalizacja' },
-  { id: 'volume_24h', label: 'Wolumen 24h' },
+  { id: 'price_usd', label: 'Cena' },
+  { id: 'market_cap_usd', label: 'Kapitalizacja' },
+  { id: 'volume_24h_usd', label: 'Wolumen 24h' },
   { id: 'percent_change_24h', label: 'Zmiana 24h' }
 ];
 
-export const CryptoListHeader = React.memo<CryptoListHeaderProps>(({
+export const CryptoListHeader: React.FC<CryptoListHeaderProps> = ({
   onSearch,
   onSort,
   currentSortBy,
   currentSortDirection,
   defaultSearchValue = ''
 }) => {
-  const { colors } = useTheme();
-  
+  const { colors, themeVersion } = useTheme();
+
+  useEffect(() => {
+    console.log('CryptoListHeader - zmiana motywu, themeVersion:', themeVersion);
+  }, [themeVersion]);
+
   const handleSearch = useCallback((text: string) => {
     onSearch(text);
   }, [onSearch]);
@@ -36,25 +40,29 @@ export const CryptoListHeader = React.memo<CryptoListHeaderProps>(({
   return (
     <View style={[styles.container, { backgroundColor: colors.background.secondary }]}>
       <SearchBar 
-        onSearch={handleSearch} 
+        onSearch={handleSearch}
         defaultValue={defaultSearchValue}
+        key={`search-${themeVersion}`} 
       />
-      <SortButtons 
+      <SortButtons
         options={SORT_OPTIONS}
         currentSortBy={currentSortBy}
         currentSortDirection={currentSortDirection}
         onSort={onSort}
         colors={colors}
+        key={`sort-${themeVersion}`}
       />
     </View>
   );
-});
+};
 
 const styles = StyleSheet.create({
   container: {
-    padding: 12,
+    padding: 16,
     borderBottomWidth: 1,
-    borderBottomColor: 'rgba(0,0,0,0.1)',
+  },
+  searchContainer: {
+    marginBottom: 12,
   },
   sortContainer: {
     flexDirection: 'row',
@@ -62,21 +70,13 @@ const styles = StyleSheet.create({
     gap: 8,
   },
   sortButton: {
-    flexDirection: 'row',
-    alignItems: 'center',
     paddingHorizontal: 12,
     paddingVertical: 6,
     borderRadius: 16,
     borderWidth: 1,
   },
-  activeSortButton: {
-    backgroundColor: 'rgba(33, 150, 243, 0.1)',
-  },
   sortButtonText: {
     fontSize: 14,
     fontWeight: '500',
-  },
-  sortIcon: {
-    marginLeft: 4,
   }
 });

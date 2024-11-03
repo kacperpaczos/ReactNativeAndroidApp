@@ -1,36 +1,35 @@
-import React, { createContext, useContext, useState, useEffect } from 'react';
+import React, { createContext, useContext, useState, useCallback } from 'react';
 import { useNetwork } from '@/hooks/useNetwork';
 import { CryptoDao } from '@/dao/CryptoDao';
 import { CryptoAsset } from '@/types/crypto';
+
+interface FetchOptions {
+  page?: number;
+  search?: string;
+  sortBy?: string;
+  sortDirection?: 'asc' | 'desc';
+}
 
 interface CryptoContextType {
   assets: CryptoAsset[];
   loading: boolean;
   error: string | null;
+  hasMoreItems: boolean;
   refreshData: () => Promise<void>;
-  showLoadingOverlay: boolean;
-  toastMessage: string | null;
+  fetchData: (options: FetchOptions) => Promise<void>;
 }
 
 export const CryptoContext = createContext<CryptoContextType | undefined>(undefined);
-
-export const useCrypto = () => {
-  const context = useContext(CryptoContext);
-  if (!context) {
-    throw new Error('useCrypto must be used within a CryptoProvider');
-  }
-  return context;
-};
 
 export const CryptoProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [assets, setAssets] = useState<CryptoAsset[]>([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [hasMoreItems, setHasMoreItems] = useState(true);
   const { isConnected } = useNetwork();
-  const [showLoadingOverlay, setShowLoadingOverlay] = useState(false);
-  const [toastMessage, setToastMessage] = useState<string | null>(null);
+  const cryptoDao = CryptoDao.getInstance();
 
-  const fetchData = async () => {
+  const fetchData = useCallback(async (options: FetchOptions = {}) => {
     if (!isConnected) {
       setError('Brak połączenia z internetem');
       return;
@@ -38,35 +37,35 @@ export const CryptoProvider: React.FC<{ children: React.ReactNode }> = ({ childr
 
     setLoading(true);
     setError(null);
-    
+
     try {
-      const cryptoDao = CryptoDao.getInstance();
-      await cryptoDao.refreshData();
-      const newAssets = await cryptoDao.getCoins({});
-      setAssets(newAssets);
+      const data = await cryptoDao.getCoins(options);
+      const newAssets = Array.isArray(data) ? data : [];
+      
+      setAssets(prev => options.page === 1 ? newAssets : [...prev, ...newAssets]);
+      setHasMoreItems(newAssets.length === 20);
     } catch (error) {
       console.error('Błąd podczas pobierania danych:', error);
       setError('Nie udało się załadować danych');
     } finally {
       setLoading(false);
     }
-  };
+  }, [isConnected]);
 
-  useEffect(() => {
-    fetchData();
-  }, []);
+  const refreshData = useCallback(async () => {
+    await cryptoDao.refreshData();
+    await fetchData({ page: 1 });
+  }, [fetchData]);
 
   return (
-    <CryptoContext.Provider 
-      value={{
-        assets,
-        loading,
-        error,
-        refreshData: fetchData,
-        showLoadingOverlay,
-        toastMessage
-      }}
-    >
+    <CryptoContext.Provider value={{
+      assets,
+      loading,
+      error,
+      hasMoreItems,
+      refreshData,
+      fetchData
+    }}>
       {children}
     </CryptoContext.Provider>
   );

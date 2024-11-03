@@ -1,6 +1,7 @@
 import React from 'react';
 import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
 import { useTheme } from '@/hooks/useTheme';
+import { LoadingSpinner } from '@/components/common/LoadingSpinner';
 
 interface CryptoListPlaceholderProps {
   onRetry?: () => void;
@@ -12,6 +13,10 @@ export const CryptoListPlaceholder: React.FC<CryptoListPlaceholderProps> = ({
   message = 'Nie udało się załadować danych kryptowalut'
 }) => {
   const { colors } = useTheme();
+  
+  if (!colors?.background?.default || !colors?.text?.primary || !colors?.button?.primary) {
+    return <LoadingSpinner />;
+  }
   
   return (
     <View style={[styles.container, { backgroundColor: colors.background.default }]}>

@@ -1,7 +1,19 @@
-import { ThemeColors } from '@/types/theme';
-
-export const lightColors: ThemeColors = {
+export const baseColors = {
   primary: '#2f95dc',
+  error: '#ff0000',
+  success: '#00c853',
+  crypto: {
+    positive: '#16c784',
+    negative: '#ea3943',
+    changeBackground: {
+      positive: '#e8f5e9',
+      negative: '#ffebee'
+    }
+  }
+};
+
+export const lightColors = {
+  ...baseColors,
   background: {
     default: '#ffffff',
     secondary: '#f5f5f5'
@@ -12,62 +24,44 @@ export const lightColors: ThemeColors = {
     default: '#000000'
   },
   border: '#e0e0e0',
-  error: '#ff0000',
   button: {
     primary: {
       background: '#2f95dc',
       text: '#ffffff'
     }
   },
-  crypto: {
-    positive: '#00c853',
-    negative: '#ff1744',
-    changeBackground: {
-      positive: '#e8f5e9',
-      negative: '#ffebee'
-    }
-  },
   chart: {
     line: '#2f95dc',
     gradient: {
-      from: 'rgba(47, 149, 220, 0.1)',
-      to: 'rgba(47, 149, 220, 0)'
+      start: 'rgba(47,149,220,0.8)',
+      end: 'rgba(47,149,220,0.1)'
     }
   }
 };
 
-export const darkColors: ThemeColors = {
-  primary: '#2196F3',
+export const darkColors = {
+  ...baseColors,
   background: {
     default: '#121212',
     secondary: '#1E1E1E'
   },
   text: {
     primary: '#FFFFFF',
-    secondary: '#AAAAAA',
+    secondary: '#B3B3B3',
     default: '#FFFFFF'
   },
-  border: '#333333',
-  error: '#FF453A',
+  border: '#404040',
   button: {
     primary: {
       background: '#2196F3',
       text: '#FFFFFF'
     }
   },
-  crypto: {
-    positive: '#4CAF50',
-    negative: '#F44336',
-    changeBackground: {
-      positive: 'rgba(76, 175, 80, 0.15)',
-      negative: 'rgba(244, 67, 54, 0.15)'
-    }
-  },
   chart: {
-    line: '#4BC0C0',
+    line: '#64B5F6',
     gradient: {
-      from: '#121212',
-      to: '#121212'
+      start: 'rgba(100,181,246,0.8)',
+      end: 'rgba(100,181,246,0.1)'
     }
   }
 };

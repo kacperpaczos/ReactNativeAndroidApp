@@ -4,6 +4,23 @@ import { useRouter } from 'expo-router';
 import { useAppState } from '@/hooks/useAppState';
 import { useTheme } from '@/hooks/useTheme';
 import { MotiView } from 'moti';
+import { LoadingSpinner } from '@/components/common/LoadingSpinner';
+import { ThemeAwareLayout } from '@/components/layouts/ThemeAwareLayout';
+
+const WelcomeImage = () => {
+  try {
+    return (
+      <Image
+        source={require('../../assets/images/welcome.png')}
+        style={styles.image}
+        resizeMode="contain"
+      />
+    );
+  } catch (error) {
+    console.error('Błąd ładowania obrazu:', error);
+    return null;
+  }
+};
 
 export const WelcomeScreen = () => {
   console.log('=== Renderowanie WelcomeScreen ===');
@@ -23,8 +40,9 @@ export const WelcomeScreen = () => {
     checkWelcomeScreen();
   }, [userPreferences.showWelcomeScreen]);
 
-  if (!colors) {
-    return null;
+  if (!colors?.background?.default || !colors?.text?.default || !colors?.text?.secondary || !colors?.primary) {
+    console.error('WelcomeScreen - niepełna definicja kolorów:', { colors });
+    return <LoadingSpinner />;
   }
 
   const handleStart = async () => {
@@ -35,52 +53,50 @@ export const WelcomeScreen = () => {
   };
 
   return (
-    <View style={[styles.container, { backgroundColor: colors.background.default }]}>
-      <MotiView
-        from={{ translateY: -50, opacity: 0 }}
-        animate={{ translateY: 0, opacity: 1 }}
-        transition={{ type: 'timing', duration: 1000 }}
-      >
-        <Image
-          source={require('@assets/images/welcome.png')}
-          style={styles.image}
-          resizeMode="contain"
-        />
-      </MotiView>
-
-      <View style={styles.content}>
+    <ThemeAwareLayout>
+      <View style={[styles.container, { backgroundColor: colors.background.default }]}>
         <MotiView
-          from={{ translateY: 50, opacity: 0 }}
+          from={{ translateY: -50, opacity: 0 }}
           animate={{ translateY: 0, opacity: 1 }}
-          transition={{ type: 'timing', duration: 800, delay: 300 }}
+          transition={{ type: 'timing', duration: 1000 }}
         >
-          <Text style={[styles.title, { color: colors.text.default }]}>
-            Witaj w CryptoNews!
-          </Text>
-          
-          <Text style={[styles.description, { color: colors.text.secondary }]}>
-            Śledź aktualne ceny kryptowalut oraz najnowsze wiadomości z rynku crypto w jednym miejscu.
-          </Text>
+          <WelcomeImage />
         </MotiView>
 
-        <MotiView
-          from={{ scale: 0.8, opacity: 0 }}
-          animate={{ scale: 1, opacity: 1 }}
-          transition={{ type: 'timing', duration: 800, delay: 600 }}
-        >
-          <Pressable
-            style={({ pressed }) => [
-              styles.button,
-              { backgroundColor: colors.primary },
-              pressed && { opacity: 0.8 }
-            ]}
-            onPress={handleStart}
+        <View style={styles.content}>
+          <MotiView
+            from={{ translateY: 50, opacity: 0 }}
+            animate={{ translateY: 0, opacity: 1 }}
+            transition={{ type: 'timing', duration: 800, delay: 300 }}
           >
-            <Text style={styles.buttonText}>Rozpocznij</Text>
-          </Pressable>
-        </MotiView>
+            <Text style={[styles.title, { color: colors.text.default }]}>
+              Witaj w CryptoNews!
+            </Text>
+            
+            <Text style={[styles.description, { color: colors.text.secondary }]}>
+              Śledź aktualne ceny kryptowalut oraz najnowsze wiadomości z rynku crypto w jednym miejscu.
+            </Text>
+          </MotiView>
+
+          <MotiView
+            from={{ scale: 0.8, opacity: 0 }}
+            animate={{ scale: 1, opacity: 1 }}
+            transition={{ type: 'timing', duration: 800, delay: 600 }}
+          >
+            <Pressable
+              style={({ pressed }) => [
+                styles.button,
+                { backgroundColor: colors.primary },
+                pressed && { opacity: 0.8 }
+              ]}
+              onPress={handleStart}
+            >
+              <Text style={styles.buttonText}>Rozpocznij</Text>
+            </Pressable>
+          </MotiView>
+        </View>
       </View>
-    </View>
+    </ThemeAwareLayout>
   );
 };
 

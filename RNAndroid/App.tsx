@@ -6,19 +6,26 @@ import { ThemeProvider } from '@/contexts/ThemeContext';
 import { ToastProvider } from '@/components/common/Toast';
 import { ModalsProvider } from '@/contexts/ModalsContext';
 import { Slot } from 'expo-router';
+import { CryptoProvider } from '@/contexts/CryptoContext';
+import { LanguageProvider } from '@/contexts/LanguageContext';
+import { AppStateProvider } from '@/contexts/AppStateContext';
+//import { RootLayoutNav } from '@/components/common/RootLayoutNav';
 
 export default function App() {
   return (
-    <CustomErrorBoundary>
-      <ThemeProvider>
-        <ModalsProvider>
-          <NavigationContainer>
-            <ToastProvider>
-              <Slot />
-            </ToastProvider>
-          </NavigationContainer>
-        </ModalsProvider>
-      </ThemeProvider>
-    </CustomErrorBoundary>
+    <ThemeProvider>
+      <AppStateProvider>
+        <LanguageProvider>
+          <ModalsProvider>
+            <CryptoProvider>
+              <ToastProvider>
+                {/* <RootLayoutNav /> */}
+                <Slot />
+              </ToastProvider>
+            </CryptoProvider>
+          </ModalsProvider>
+        </LanguageProvider>
+      </AppStateProvider>
+    </ThemeProvider>
   );
 }

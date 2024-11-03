@@ -9,8 +9,28 @@ interface NewsListItemProps {
   item: NewsItem;
 }
 
+interface NewsFooterItemProps {
+  icon: keyof typeof MaterialIcons.glyphMap;
+  text: string;
+  color: string;
+}
+
+const NewsFooterItem = ({ icon, text, color }: NewsFooterItemProps) => (
+  <View style={styles.footerItem}>
+    <MaterialIcons 
+      name={icon}
+      size={14}
+      color={color}
+      style={styles.icon}
+    />
+    <Text style={[styles.footerText, { color }]}>
+      {text}
+    </Text>
+  </View>
+);
+
 export const NewsListItem = memo<NewsListItemProps>(({ item }) => {
-  const { colors } = useTheme();
+  const { colors, themeVersion } = useTheme();
   const defaultImage = require('@assets/images/news-placeholder.png');
 
   const handlePress = async () => {
@@ -28,12 +48,54 @@ export const NewsListItem = memo<NewsListItemProps>(({ item }) => {
     }
   };
 
+  const renderImage = () => (
+    <View style={styles.imageContainer}>
+      <Image
+        source={item.imageUrl ? { uri: item.imageUrl } : defaultImage}
+        style={styles.image}
+        resizeMode="cover"
+      />
+    </View>
+  );
+
+  const renderContent = () => (
+    <View style={styles.content}>
+      <Text 
+        style={[styles.title, { color: colors.text.primary }]}
+        numberOfLines={2}
+      >
+        {item.title}
+      </Text>
+      
+      <Text 
+        style={[styles.summary, { color: colors.text.secondary }]}
+        numberOfLines={2}
+      >
+        {item.summary}
+      </Text>
+      
+      <View style={styles.footer}>
+        <NewsFooterItem 
+          icon="public"
+          text={item.source}
+          color={colors.text.secondary}
+        />
+        <NewsFooterItem
+          icon="access-time" 
+          text={formatDate(item.date)}
+          color={colors.text.secondary}
+        />
+      </View>
+    </View>
+  );
+
   return (
     <Pressable
+      key={themeVersion}
       style={({ pressed }) => [
         styles.container,
         { 
-          backgroundColor: colors.background,
+          backgroundColor: colors.background.default,
           borderColor: colors.border,
         },
         pressed && styles.pressed
@@ -41,55 +103,8 @@ export const NewsListItem = memo<NewsListItemProps>(({ item }) => {
       onPress={handlePress}
     >
       <View style={styles.contentWrapper}>
-        <View style={styles.imageContainer}>
-          <Image
-            source={item.imageUrl ? { uri: item.imageUrl } : defaultImage}
-            style={styles.image}
-            resizeMode="cover"
-          />
-        </View>
-        
-        <View style={styles.content}>
-          <Text 
-            style={[styles.title, { color: colors.text.primary }]}
-            numberOfLines={2}
-          >
-            {item.title}
-          </Text>
-          
-          <Text 
-            style={[styles.summary, { color: colors.text.secondary }]}
-            numberOfLines={2}
-          >
-            {item.summary}
-          </Text>
-          
-          <View style={styles.footer}>
-            <View style={styles.sourceContainer}>
-              <MaterialIcons 
-                name="public" 
-                size={14} 
-                color={colors.text.secondary}
-                style={styles.icon} 
-              />
-              <Text style={[styles.source, { color: colors.text.secondary }]}>
-                {item.source}
-              </Text>
-            </View>
-
-            <View style={styles.dateContainer}>
-              <MaterialIcons 
-                name="access-time" 
-                size={14} 
-                color={colors.text.secondary}
-                style={styles.icon}
-              />
-              <Text style={[styles.date, { color: colors.text.secondary }]}>
-                {formatDate(item.date)}
-              </Text>
-            </View>
-          </View>
-        </View>
+        {renderImage()}
+        {renderContent()}
       </View>
     </Pressable>
   );
@@ -97,11 +112,11 @@ export const NewsListItem = memo<NewsListItemProps>(({ item }) => {
 
 const styles = StyleSheet.create({
   container: {
-    marginHorizontal: 16,
-    marginVertical: 8,
-    borderRadius: 12,
-    borderWidth: 1,
+    backgroundColor: 'transparent',
+    marginBottom: 12,
+    borderRadius: 8,
     overflow: 'hidden',
+    borderWidth: 1,
   },
   pressed: {
     opacity: 0.7,
@@ -119,41 +134,33 @@ const styles = StyleSheet.create({
     height: '100%',
   },
   content: {
-    flex: 1,
     padding: 12,
-    justifyContent: 'space-between',
   },
   title: {
     fontSize: 16,
     fontWeight: '600',
     marginBottom: 8,
-    lineHeight: 22,
   },
   summary: {
     fontSize: 14,
     lineHeight: 20,
-    marginBottom: 12,
+    marginBottom: 8,
   },
   footer: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
+    marginTop: 8,
   },
-  sourceContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-  },
-  dateContainer: {
+  footerItem: {
     flexDirection: 'row',
     alignItems: 'center',
   },
   icon: {
     marginRight: 4,
   },
-  source: {
-    fontSize: 12,
-  },
-  date: {
+  footerText: {
+    marginLeft: 4,
     fontSize: 12,
   }
 });

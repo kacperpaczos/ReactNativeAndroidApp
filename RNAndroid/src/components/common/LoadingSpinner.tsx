@@ -15,10 +15,10 @@ export const LoadingSpinner: React.FC<LoadingSpinnerProps> = ({
   const { colors } = useTheme();
   
   return (
-    <View style={[styles.container, { backgroundColor: colors?.background?.default }]}>
+    <View style={[styles.container, { backgroundColor: colors.background.default }]}>
       <ActivityIndicator 
         size={size} 
-        color={color || colors?.primary} 
+        color={color || colors.primary} 
       />
     </View>
   );

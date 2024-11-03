@@ -17,13 +17,20 @@ export const useAppState = () => {
 
         const storedLaunch = await AsyncStorage.getItem('isFirstLaunch');
         const storedPreferences = await AsyncStorage.getItem('userPreferences');
+        const storedTheme = await AsyncStorage.getItem('theme');
 
         if (storedLaunch !== null) {
           setIsFirstLaunch(storedLaunch === 'true');
         }
 
         if (storedPreferences) {
-          setUserPreferences(JSON.parse(storedPreferences));
+          const preferences = JSON.parse(storedPreferences);
+          setUserPreferences(preferences);
+        }
+
+        if (!storedTheme) {
+          await AsyncStorage.setItem('theme', 'system');
+          await updateUserPreferences({ ...userPreferences, darkMode: 'system' });
         }
         
         setIsLoading(false);
@@ -42,9 +49,25 @@ export const useAppState = () => {
   };
 
   const updateUserPreferences = async (newPreferences: Partial<UserPreferences>) => {
-    const updatedPreferences = { ...userPreferences, ...newPreferences };
-    await AsyncStorage.setItem('userPreferences', JSON.stringify(updatedPreferences));
-    setUserPreferences(updatedPreferences);
+    console.log('useAppState - aktualizacja preferencji:', {
+      obecne: userPreferences,
+      nowe: newPreferences
+    });
+
+    try {
+      const updatedPreferences = { ...userPreferences, ...newPreferences };
+      
+      console.log('useAppState - zapisywanie preferencji:', updatedPreferences);
+      await AsyncStorage.setItem('userPreferences', JSON.stringify(updatedPreferences));
+      
+      console.log('useAppState - aktualizacja stanu');
+      setUserPreferences(updatedPreferences);
+      
+      console.log('useAppState - preferencje zaktualizowane pomyślnie');
+    } catch (error) {
+      console.error('useAppState - błąd podczas aktualizacji preferencji:', error);
+      throw new Error('Nie udało się zaktualizować preferencji użytkownika');
+    }
   };
 
   return {

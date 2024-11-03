@@ -1,55 +1,7 @@
-import React, { createContext, useContext, useState, useCallback } from 'react';
-
-interface ModalsContextType {
-  showAppInfoModal: () => void;
-  hideAppInfoModal: () => void;
-  isAppInfoModalVisible: boolean;
-  showCryptoInfoModal: () => void;
-  hideCryptoInfoModal: () => void;
-  isCryptoInfoModalVisible: boolean;
-}
+import React, { createContext, useContext, useState } from 'react';
+import { ModalsContextType } from '@/types/modals';
 
 const ModalsContext = createContext<ModalsContextType | undefined>(undefined);
-
-export const ModalsProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  const [isAppInfoModalVisible, setIsAppInfoModalVisible] = useState(false);
-  const [isCryptoInfoModalVisible, setCryptoInfoModalVisible] = useState(false);
-
-  const showAppInfoModal = useCallback(() => {
-    console.log('ModalsContext: Pokazywanie App modalu');
-    setIsAppInfoModalVisible(true);
-  }, []);
-
-  const hideAppInfoModal = useCallback(() => {
-    console.log('ModalsContext: Ukrywanie App modalu');
-    setIsAppInfoModalVisible(false);
-  }, []);
-
-  const showCryptoInfoModal = useCallback(() => {
-    console.log('ModalsContext: Pokazywanie Crypto modalu');
-    setCryptoInfoModalVisible(true);
-  }, []);
-
-  const hideCryptoInfoModal = useCallback(() => {
-    console.log('ModalsContext: Ukrywanie Crypto modalu');
-    setCryptoInfoModalVisible(false);
-  }, []);
-
-  return (
-    <ModalsContext.Provider 
-      value={{
-        isAppInfoModalVisible,
-        showAppInfoModal,
-        hideAppInfoModal,
-        isCryptoInfoModalVisible,
-        showCryptoInfoModal,
-        hideCryptoInfoModal,
-      }}
-    >
-      {children}
-    </ModalsContext.Provider>
-  );
-};
 
 export const useModals = () => {
   const context = useContext(ModalsContext);
@@ -57,4 +9,29 @@ export const useModals = () => {
     throw new Error('useModals musi być używany wewnątrz ModalsProvider');
   }
   return context;
+};
+
+export const ModalsProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+  const [isAppInfoModalVisible, setIsAppInfoModalVisible] = useState(false);
+  const [isCryptoInfoModalVisible, setIsCryptoInfoModalVisible] = useState(false);
+
+  const showAppInfoModal = () => setIsAppInfoModalVisible(true);
+  const hideAppInfoModal = () => setIsAppInfoModalVisible(false);
+  const showCryptoInfoModal = () => setIsCryptoInfoModalVisible(true);
+  const hideCryptoInfoModal = () => setIsCryptoInfoModalVisible(false);
+
+  return (
+    <ModalsContext.Provider
+      value={{
+        isAppInfoModalVisible,
+        isCryptoInfoModalVisible,
+        showAppInfoModal,
+        hideAppInfoModal,
+        showCryptoInfoModal,
+        hideCryptoInfoModal,
+      }}
+    >
+      {children}
+    </ModalsContext.Provider>
+  );
 };

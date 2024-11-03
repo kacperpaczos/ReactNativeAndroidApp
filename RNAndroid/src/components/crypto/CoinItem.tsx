@@ -1,8 +1,7 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { View, Text, StyleSheet } from 'react-native';
 import { useTheme } from '@/hooks/useTheme';
 import { formatCurrency, formatPercentage, formatMarketCap } from '@/utils/formatters';
-import { Colors } from '@/constants/Colors';
 import { CryptoAsset } from '@/types/crypto';
 
 interface CoinItemProps {
@@ -10,9 +9,13 @@ interface CoinItemProps {
   currentSortBy: string;
 }
 
-export const CoinItem = React.memo<CoinItemProps>(({ asset, currentSortBy }) => {
-  const { colors } = useTheme();
+export const CoinItem: React.FC<CoinItemProps> = ({ asset, currentSortBy }) => {
+  const { colors, themeVersion } = useTheme();
   
+  useEffect(() => {
+    console.log('CoinItem - zmiana motywu, themeVersion:', themeVersion);
+  }, [themeVersion]);
+
   const price = asset.quotes?.USD?.price ?? 0;
   const change = asset.quotes?.USD?.percent_change_24h ?? 0;
   const marketCap = asset.quotes?.USD?.market_cap ?? 0;
@@ -21,7 +24,7 @@ export const CoinItem = React.memo<CoinItemProps>(({ asset, currentSortBy }) => 
   const isHighlighted = (field: string) => currentSortBy === field;
 
   return (
-    <View style={[styles.container, { backgroundColor: colors.background }]}>
+    <View style={[styles.container, { backgroundColor: colors.background.default }]}>
       <View style={styles.mainContent}>
         <View style={styles.leftSection}>
           <View style={styles.rankContainer}>
@@ -52,7 +55,7 @@ export const CoinItem = React.memo<CoinItemProps>(({ asset, currentSortBy }) => 
           <Text style={[
             styles.change,
             isHighlighted('change') && styles.highlightedValue,
-            { color: change >= 0 ? Colors.crypto.positive : Colors.crypto.negative }
+            { color: change >= 0 ? colors.crypto.positive : colors.crypto.negative }
           ]}>
             {formatPercentage(change)}
           </Text>
@@ -80,15 +83,7 @@ export const CoinItem = React.memo<CoinItemProps>(({ asset, currentSortBy }) => 
       </View>
     </View>
   );
-}, (prevProps, nextProps) => {
-  return (
-    prevProps.asset.id === nextProps.asset.id &&
-    prevProps.asset.rank === nextProps.asset.rank &&
-    prevProps.asset.quotes?.USD?.price === nextProps.asset.quotes?.USD?.price &&
-    prevProps.asset.quotes?.USD?.percent_change_24h === nextProps.asset.quotes?.USD?.percent_change_24h &&
-    prevProps.currentSortBy === nextProps.currentSortBy
-  );
-});
+};
 
 const styles = StyleSheet.create({
   container: {

@@ -1,6 +1,7 @@
 import React from 'react';
 import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
 import { useTheme } from '@/hooks/useTheme';
+import { useLanguage } from '@/contexts/LanguageContext';
 
 interface NewsListPlaceholderProps {
   onRetry?: () => void;
@@ -8,18 +9,21 @@ interface NewsListPlaceholderProps {
 
 export const NewsListPlaceholder: React.FC<NewsListPlaceholderProps> = ({ onRetry }) => {
   const { colors } = useTheme();
+  const { translations } = useLanguage();
   
   return (
     <View style={styles.container}>
       <Text style={[styles.message, { color: colors.text }]}>
-        Nie udało się załadować wiadomości
+        {translations.news.loadError}
       </Text>
       {onRetry && (
         <TouchableOpacity 
           style={[styles.button, { backgroundColor: colors.primary }]}
           onPress={onRetry}
         >
-          <Text style={styles.buttonText}>Odśwież</Text>
+          <Text style={styles.buttonText}>
+            {translations.common.refresh}
+          </Text>
         </TouchableOpacity>
       )}
     </View>

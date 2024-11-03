@@ -2,29 +2,46 @@ import React from 'react';
 import { View, Text, StyleSheet, Pressable } from 'react-native';
 import { MaterialIcons } from '@expo/vector-icons';
 import { useTheme } from '@/hooks/useTheme';
-import { useAppState } from '@/hooks/useAppState';
 import { ThemeMode } from '@/types/theme';
+import { useLanguage } from '@/contexts/LanguageContext';
 
-const THEME_OPTIONS: { id: ThemeMode; label: string; icon: string }[] = [
-  { id: 'light', label: 'Jasny', icon: 'light-mode' },
-  { id: 'dark', label: 'Ciemny', icon: 'dark-mode' },
-  { id: 'system', label: 'Systemowy', icon: 'settings-brightness' }
+const THEME_OPTIONS: { id: ThemeMode; label: 'light' | 'dark' | 'system' }[] = [
+  { id: 'light', label: 'light' },
+  { id: 'dark', label: 'dark' },
+  { id: 'system', label: 'system' }
 ];
 
+const getThemeIcon = (theme: ThemeMode): keyof typeof MaterialIcons.glyphMap => {
+  switch (theme) {
+    case 'light':
+      return 'light-mode';
+    case 'dark':
+      return 'dark-mode';
+    case 'system':
+      return 'settings-suggest';
+    default:
+      return 'light-mode';
+  }
+};
+
 export const ThemeSelector = () => {
-  const { colors } = useTheme();
-  const { userPreferences, updateUserPreferences } = useAppState();
-  const [, forceUpdate] = React.useReducer(x => x + 1, 0);
+  const { colors, currentTheme, updateTheme } = useTheme();
+  const { translations } = useLanguage();
 
   const handleThemeChange = async (theme: ThemeMode) => {
-    await updateUserPreferences({ ...userPreferences, darkMode: theme });
-    forceUpdate();
+    console.log('ThemeSelector - zmiana motywu na:', theme);
+    try {
+      await updateTheme(theme);
+      console.log('ThemeSelector - motyw zaktualizowany pomyślnie');
+    } catch (error) {
+      console.error('ThemeSelector - błąd podczas aktualizacji motywu:', error);
+    }
   };
 
   return (
     <View style={styles.container}>
       <Text style={[styles.title, { color: colors.text.primary }]}>
-        Motyw aplikacji
+        {translations.settings.theme.title}
       </Text>
       <View style={styles.optionsContainer}>
         {THEME_OPTIONS.map((option) => (
@@ -34,24 +51,24 @@ export const ThemeSelector = () => {
               styles.option,
               { 
                 backgroundColor: colors.background.secondary,
-                borderColor: userPreferences.darkMode === option.id ? colors.primary : 'transparent',
+                borderColor: currentTheme === option.id ? colors.primary : 'transparent',
                 opacity: pressed ? 0.7 : 1
               }
             ]}
             onPress={() => handleThemeChange(option.id)}
           >
             <MaterialIcons
-              name={option.icon as any}
+              name={getThemeIcon(option.id)}
               size={24}
-              color={userPreferences.darkMode === option.id ? colors.primary : colors.text.secondary}
+              color={currentTheme === option.id ? colors.primary : colors.text.secondary}
             />
             <Text
               style={[
                 styles.optionText,
-                { color: userPreferences.darkMode === option.id ? colors.primary : colors.text.primary }
+                { color: currentTheme === option.id ? colors.primary : colors.text.primary }
               ]}
             >
-              {option.label}
+              {translations.settings.theme[option.label]}
             </Text>
           </Pressable>
         ))}

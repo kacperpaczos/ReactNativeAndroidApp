@@ -7,7 +7,7 @@ import { LoadingSpinner } from '../common/LoadingSpinner';
 import { NewsListItem } from '../news/NewsListItem';
 
 export const CryptoNews: React.FC = () => {
-  const { colors } = useTheme();
+  const { colors, themeVersion } = useTheme();
   const [news, setNews] = useState<NewsItem[]>([]);
   const [loading, setLoading] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
@@ -39,6 +39,11 @@ export const CryptoNews: React.FC = () => {
   useEffect(() => {
     loadNews();
   }, []);
+
+  useEffect(() => {
+    console.log('CryptoNews - zmiana motywu, themeVersion:', themeVersion);
+    loadNews(false);
+  }, [themeVersion]);
 
   if (loading && !refreshing) {
     return <LoadingSpinner />;

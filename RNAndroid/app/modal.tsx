@@ -1,13 +1,24 @@
+import React from 'react';
 import { StatusBar } from 'expo-status-bar';
 import { Platform, StyleSheet, Image } from 'react-native';
 import { Text, View } from '@components/Themed';
 import { useTheme } from '@/hooks/useTheme';
+import { LoadingSpinner } from '@/components/common/LoadingSpinner';
 
-export default function ModalScreen() {
-  const { colors } = useTheme();
-  
+interface AboutAppProps {
+  version: string;
+  colors: {
+    text: {
+      primary: string;
+      secondary: string;
+    };
+    border: string;
+  };
+}
+
+const AboutApp: React.FC<AboutAppProps> = ({ version, colors }) => {
   return (
-    <View style={[styles.container, { backgroundColor: colors.background.default }]}>
+    <>
       <Image 
         source={require('../assets/images/logo.png')}
         style={styles.logo}
@@ -23,8 +34,22 @@ export default function ModalScreen() {
         wiadomościami ze świata kryptowalut.
       </Text>
       <Text style={[styles.version, { color: colors.text.secondary }]}>
-        Wersja 1.0.0
+        Wersja {version}
       </Text>
+    </>
+  );
+};
+
+export default function ModalScreen() {
+  const { colors } = useTheme();
+  
+  if (!colors?.background?.default || !colors?.text?.primary || !colors?.text?.secondary) {
+    return <LoadingSpinner />;
+  }
+  
+  return (
+    <View style={[styles.container, { backgroundColor: colors.background.default }]}>
+      <AboutApp version="1.0.0" colors={colors} />
       <StatusBar style={Platform.OS === 'ios' ? 'light' : 'auto'} />
     </View>
   );

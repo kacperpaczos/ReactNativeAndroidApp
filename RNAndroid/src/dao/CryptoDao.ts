@@ -89,7 +89,7 @@ export class CryptoDao {
       const coins = await this.api.getCoins({ limit: 100 });
       this.cache.clear();
       coins.forEach(coin => {
-        this.cache.set(coin.id, coin);
+        this.cache.set(String(coin.id), coin);
       });
       this.lastUpdate = new Date();
     } catch (error) {

@@ -6,9 +6,11 @@ import { useTheme } from '@/hooks/useTheme';
 interface SearchBarProps {
   onSearch: (text: string) => void;
   defaultValue?: string;
+  placeholder?: string;
+  debounceTime?: number;
 }
 
-export const SearchBar = React.memo<SearchBarProps>(({ onSearch, defaultValue = '' }) => {
+export const SearchBar = React.memo<SearchBarProps>(({ onSearch, defaultValue = '', placeholder = '', debounceTime = 500 }) => {
   const { colors } = useTheme();
   const inputRef = useRef<TextInput>(null);
 
@@ -17,12 +19,12 @@ export const SearchBar = React.memo<SearchBarProps>(({ onSearch, defaultValue = 
   }, [onSearch]);
 
   return (
-    <View style={[styles.container, { backgroundColor: colors.background }]}>
+    <View style={[styles.container, { backgroundColor: colors.background.default }]}>
       <MaterialIcons name="search" size={24} color={colors.text.secondary} />
       <TextInput
         ref={inputRef}
         style={[styles.input, { color: colors.text.primary }]}
-        placeholder="Szukaj kryptowaluty..."
+        placeholder={placeholder}
         placeholderTextColor={colors.text.secondary}
         defaultValue={defaultValue}
         onChangeText={handleChangeText}

@@ -1,17 +1,25 @@
 import React, { useEffect } from 'react';
-import { View, Text, StyleSheet, Switch } from 'react-native';
+import { View, Text, StyleSheet, Switch, TouchableOpacity } from 'react-native';
 import { useTheme } from '@/hooks/useTheme';
 import { useAppState } from '@/hooks/useAppState';
 import { ThemeSelector } from './ThemeSelector';
+import { LanguageSelector } from './LanguageSelector';
+import { LoadingSpinner } from '@/components/common/LoadingSpinner';
+import { ThemeAwareLayout } from '@/components/layouts/ThemeAwareLayout';
+import { useLanguage } from '@/contexts/LanguageContext';
 
 export const SettingsScreen = () => {
-  console.log('=== Renderowanie SettingsScreen ===');
   const { colors } = useTheme();
   const { userPreferences, updateUserPreferences } = useAppState();
+  const { translations } = useLanguage();
 
-  useEffect(() => {
-    console.log('SettingsScreen - aktualne preferencje:', userPreferences);
-  }, [userPreferences]);
+  if (!colors?.background?.default || 
+      !colors?.text?.primary || 
+      !colors?.text?.secondary || 
+      !colors?.border || 
+      !colors?.primary) {
+    return <LoadingSpinner />;
+  }
 
   const toggleNotifications = (value: boolean) => {
     console.log('SettingsScreen - zmiana powiadomień:', value);
@@ -24,72 +32,85 @@ export const SettingsScreen = () => {
   };
 
   return (
-    <View style={[styles.container, { backgroundColor: colors.background.default }]}>
-      <View style={[styles.section, { borderBottomColor: colors.border }]}>
-        <ThemeSelector />
-        
-        <Text style={[styles.notice, { color: colors.text.secondary }]}>
-          Zmiana motywu wymaga ponownego uruchomienia aplikacji
-        </Text>
-        
-        <View style={styles.settingItem}>
-          <Text style={[styles.settingText, { color: colors.text.primary }]}>
-            Ekran powitalny
+    <ThemeAwareLayout>
+      <View 
+        style={[styles.container, { backgroundColor: colors.background.default }]}
+      >
+        <View style={[styles.section, { borderBottomColor: colors.border }]}>
+          <Text style={[styles.sectionTitle, { color: colors.text.primary }]}>
+            {translations.settings.theme.title}
           </Text>
-          <Switch
-            value={userPreferences?.showWelcomeScreen ?? true}
-            onValueChange={toggleWelcomeScreen}
-            trackColor={{ false: colors.border, true: colors.primary }}
-          />
-        </View>
+          
+          <ThemeSelector />
+          
+          <Text style={[styles.notice, { color: colors.text.secondary }]}>
+            {translations.settings.theme.notice}
+          </Text>
+          
+          <View style={styles.settingItem}>
+            <Text style={[styles.settingText, { color: colors.text.primary }]}>
+              {translations.settings.welcomeScreen}
+            </Text>
+            <Switch
+              value={userPreferences?.showWelcomeScreen ?? true}
+              onValueChange={toggleWelcomeScreen}
+              trackColor={{ false: colors.border, true: colors.primary }}
+            />
+          </View>
 
-        <View style={styles.settingItem}>
-          <Text style={[styles.settingText, { color: colors.text.primary }]}>
-            Powiadomienia
-          </Text>
-          <Switch
-            value={userPreferences?.notifications}
-            onValueChange={toggleNotifications}
-            trackColor={{ false: colors.border, true: colors.primary }}
-          />
+          <View style={styles.settingItem}>
+            <Text style={[styles.settingText, { color: colors.text.primary }]}>
+              {translations.settings.notifications}
+            </Text>
+            <Switch
+              value={userPreferences?.notifications}
+              onValueChange={toggleNotifications}
+              trackColor={{ false: colors.border, true: colors.primary }}
+            />
+          </View>
+
+          <LanguageSelector />
         </View>
+        
+        <Text style={[styles.version, { color: colors.text.secondary }]}>
+          {translations.settings.version} 1.0.0
+        </Text>
       </View>
-      
-      <Text style={[styles.version, { color: colors.text.secondary }]}>
-        Wersja aplikacji: 1.0.0
-      </Text>
-    </View>
+    </ThemeAwareLayout>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    padding: 16,
   },
   section: {
-    paddingVertical: 16,
     borderBottomWidth: 1,
+    paddingBottom: 16,
+    marginBottom: 16,
+  },
+  sectionTitle: {
+    fontSize: 18,
+    fontWeight: '600',
+    marginBottom: 16,
   },
   settingItem: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    paddingHorizontal: 16,
-    paddingVertical: 12,
+    marginBottom: 16,
   },
   settingText: {
     fontSize: 16,
   },
+  notice: {
+    fontSize: 14,
+    fontStyle: 'italic',
+    marginBottom: 16,
+  },
   version: {
     fontSize: 14,
     textAlign: 'center',
-    marginTop: 24,
-  },
-  notice: {
-    fontSize: 12,
-    textAlign: 'center',
-    marginTop: 8,
-    marginBottom: 16,
-    fontStyle: 'italic',
   },
 });

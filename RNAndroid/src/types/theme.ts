@@ -1,23 +1,20 @@
 export type ThemeMode = 'light' | 'dark' | 'system';
 
 export interface ThemeColors {
-  primary: string;
   background: {
     default: string;
     secondary: string;
   };
   text: {
+    default: string;
     primary: string;
     secondary: string;
-    default: string;
   };
-  border: string;
-  error: string;
   button: {
     primary: {
       background: string;
       text: string;
-    }
+    };
   };
   crypto: {
     positive: string;
@@ -25,14 +22,18 @@ export interface ThemeColors {
     changeBackground: {
       positive: string;
       negative: string;
-    }
+    };
   };
   chart: {
     line: string;
     gradient: {
-      from: string;
-      to: string;
-    }
-  }
+      start: string;
+      end: string;
+    };
+  };
+  primary: string;
+  border: string;
+  error: string;
+  success: string;
 }
 

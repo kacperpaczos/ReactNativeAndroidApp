@@ -12,16 +12,11 @@ export interface UserPreferences {
     userPreferences: UserPreferences;
   }
   
-  export const DEFAULT_PREFERENCES: AppState = {
-    isOffline: false,
-    lastUpdateTime: null,
-    isFirstLaunch: true,
-    userPreferences: {
-      darkMode: 'system',
-      refreshInterval: 300000,
-      showWelcomeScreen: true,
-      notifications: false
-    }
+  export const DEFAULT_PREFERENCES: UserPreferences = {
+    darkMode: 'system',
+    refreshInterval: 300000,
+    showWelcomeScreen: true,
+    notifications: false
   };
   
   export interface AppStateManager {

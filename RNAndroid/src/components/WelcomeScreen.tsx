@@ -6,7 +6,6 @@ import { useTheme } from '@/hooks/useTheme';
 import { MotiView } from 'moti';
 import { LoadingSpinner } from '@/components/common/LoadingSpinner';
 import { ThemeAwareLayout } from '@/components/layouts/ThemeAwareLayout';
-import { useTranslation } from 'react-i18next';
 
 const WelcomeImage = () => {
   try {
@@ -29,7 +28,6 @@ export const WelcomeScreen = () => {
   const { setFirstLaunch } = useAppState();
   const { colors } = useTheme();
   const { userPreferences } = useAppState();
-  const { t } = useTranslation();
 
   useEffect(() => {
     const checkWelcomeScreen = async () => {
@@ -71,12 +69,12 @@ export const WelcomeScreen = () => {
             animate={{ translateY: 0, opacity: 1 }}
             transition={{ type: 'timing', duration: 800, delay: 300 }}
           >
-            <Text style={[styles.title, { color: colors.text.primary }]}>
-              {t('welcome.title')}
+            <Text style={[styles.title, { color: colors.text.default }]}>
+              Witaj w CryptoNews!
             </Text>
             
             <Text style={[styles.description, { color: colors.text.secondary }]}>
-              {t('welcome.description')}
+              Śledź aktualne ceny kryptowalut oraz najnowsze wiadomości z rynku crypto w jednym miejscu.
             </Text>
           </MotiView>
 

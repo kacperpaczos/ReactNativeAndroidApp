@@ -7,11 +7,13 @@ import { LanguageSelector } from './LanguageSelector';
 import { LoadingSpinner } from '@/components/common/LoadingSpinner';
 import { ThemeAwareLayout } from '@/components/layouts/ThemeAwareLayout';
 import { useLanguage } from '@/contexts/LanguageContext';
+import { useApp } from '@/contexts/AppContext';
 
 export const SettingsScreen = () => {
   const { colors } = useTheme();
   const { userPreferences, updateUserPreferences } = useAppState();
   const { translations } = useLanguage();
+  const { startBitcoinNotifications, stopBitcoinNotifications } = useApp();
 
   if (!colors?.background?.default || 
       !colors?.text?.primary || 
@@ -23,6 +25,13 @@ export const SettingsScreen = () => {
 
   const toggleNotifications = (value: boolean) => {
     console.log('SettingsScreen - zmiana powiadomień:', value);
+    
+    if (value) {
+      startBitcoinNotifications();
+    } else {
+      stopBitcoinNotifications();
+    }
+    
     updateUserPreferences({ ...userPreferences, notifications: value });
   };
 

@@ -6,7 +6,6 @@ import { CryptoAsset } from '@/types/crypto';
 import { formatPrice, formatPercentage, formatMarketCap } from '@/utils/formatters';
 import { ThemeAwareLayout } from '@/components/layouts/ThemeAwareLayout';
 import { ThemeColors } from '@/types/theme';
-import { useTranslation } from 'react-i18next';
 
 interface CryptoDetailsProps {
   asset: CryptoAsset;
@@ -70,30 +69,26 @@ const PriceHeader: React.FC<{asset: CryptoAsset, colors: ThemeColors}> = ({asset
   </View>
 );
 
-const StatsSection: React.FC<{asset: CryptoAsset, colors: any}> = ({asset, colors}) => {
-  const { t } = useTranslation();
-
-  return (
-    <View style={[styles.statsContainer, { borderColor: colors.border }]}>
-      <View style={styles.statRow}>
-        <Text style={[styles.statLabel, { color: colors.text.secondary }]}>
-          {t('cryptoDetails.marketCap')}
-        </Text>
-        <Text style={[styles.statValue, { color: colors.text.primary }]}>
-          ${formatMarketCap(asset.quotes.USD.market_cap)}
-        </Text>
-      </View>
-      <View style={styles.statRow}>
-        <Text style={[styles.statLabel, { color: colors.text.secondary }]}>
-          {t('cryptoDetails.volume24h')}
-        </Text>
-        <Text style={[styles.statValue, { color: colors.text.primary }]}>
-          ${formatMarketCap(asset.quotes.USD.volume_24h)}
-        </Text>
-      </View>
+const StatsSection: React.FC<{asset: CryptoAsset, colors: any}> = ({asset, colors}) => (
+  <View style={[styles.statsContainer, { borderColor: colors.border }]}>
+    <View style={styles.statRow}>
+      <Text style={[styles.statLabel, { color: colors.text.secondary }]}>
+        Kapitalizacja rynkowa
+      </Text>
+      <Text style={[styles.statValue, { color: colors.text.primary }]}>
+        ${formatMarketCap(asset.quotes.USD.market_cap)}
+      </Text>
     </View>
-  );
-};
+    <View style={styles.statRow}>
+      <Text style={[styles.statLabel, { color: colors.text.secondary }]}>
+        Wolumen (24h)
+      </Text>
+      <Text style={[styles.statValue, { color: colors.text.primary }]}>
+        ${formatMarketCap(asset.quotes.USD.volume_24h)}
+      </Text>
+    </View>
+  </View>
+);
 
 export const CryptoDetails: React.FC<CryptoDetailsProps> = ({ asset }) => {
   const { colors, themeVersion } = useTheme();

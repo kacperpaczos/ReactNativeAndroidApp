@@ -36,7 +36,7 @@ export const Toast: React.FC<ToastProps> = ({
     <Animated.View 
       style={[
         styles.container, 
-        { backgroundColor: colors.surface, opacity }
+        { backgroundColor: colors.background.default, opacity }
       ]}
     >
       <Text style={[styles.message, { color: colors.text.primary }]}>

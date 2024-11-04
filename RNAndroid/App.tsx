@@ -9,23 +9,26 @@ import { Slot } from 'expo-router';
 import { CryptoProvider } from '@/contexts/CryptoContext';
 import { LanguageProvider } from '@/contexts/LanguageContext';
 import { AppStateProvider } from '@/contexts/AppStateContext';
+import { AppProvider } from '@/contexts/AppContext';
 //import { RootLayoutNav } from '@/components/common/RootLayoutNav';
 
 export default function App() {
   return (
-    <ThemeProvider>
-      <AppStateProvider>
-        <LanguageProvider>
-          <ModalsProvider>
-            <CryptoProvider>
-              <ToastProvider>
-                {/* <RootLayoutNav /> */}
-                <Slot />
-              </ToastProvider>
-            </CryptoProvider>
-          </ModalsProvider>
-        </LanguageProvider>
-      </AppStateProvider>
-    </ThemeProvider>
+    <AppProvider>
+      <ThemeProvider>
+        <AppStateProvider>
+          <LanguageProvider>
+            <ModalsProvider>
+              <CryptoProvider>
+                <ToastProvider>
+                  {/* <RootLayoutNav /> */}
+                  <Slot />
+                </ToastProvider>
+              </CryptoProvider>
+            </ModalsProvider>
+          </LanguageProvider>
+        </AppStateProvider>
+      </ThemeProvider>
+    </AppProvider>
   );
 }

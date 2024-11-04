@@ -1,10 +1,10 @@
 import React, { memo } from 'react';
 import { View, Text, StyleSheet, Pressable, Image, Linking } from 'react-native';
+import { Toast } from '@/components/common/Toast';
 import { MaterialIcons } from '@expo/vector-icons';
 import { useTheme } from '@/hooks/useTheme';
 import { NewsItem } from '@/types/news';
 import { formatDate } from '@/utils/formatters';
-import { useTranslation } from 'react-i18next';
 
 interface NewsListItemProps {
   item: NewsItem;
@@ -32,21 +32,33 @@ const NewsFooterItem = ({ icon, text, color }: NewsFooterItemProps) => (
 
 export const NewsListItem = memo<NewsListItemProps>(({ item }) => {
   const { colors, themeVersion } = useTheme();
-  const { t } = useTranslation();
   const defaultImage = require('@assets/images/news-placeholder.png');
 
   const handlePress = async () => {
-    if (!item.url) return;
+    if (!item.url) {
+      Toast({
+        message: "Brak dostępnego linku do artykułu",
+        onHide: () => {}
+      });
+      return;
+    }
     
     try {
       const canOpen = await Linking.canOpenURL(item.url);
       if (canOpen) {
         await Linking.openURL(item.url);
       } else {
-        console.error('Nie można otworzyć URL:', item.url);
+        Toast({
+          message: 'Nie można otworzyć tego linku',
+          onHide: () => {}
+        });
       }
     } catch (error) {
       console.error('Błąd podczas otwierania URL:', error);
+      Toast({
+        message: 'Wystąpił błąd podczas otwierania linku',
+        onHide: () => {}
+      });
     }
   };
 
@@ -79,12 +91,12 @@ export const NewsListItem = memo<NewsListItemProps>(({ item }) => {
       <View style={styles.footer}>
         <NewsFooterItem 
           icon="public"
-          text={t('news.source')}: {item.source}
+          text={item.source}
           color={colors.text.secondary}
         />
         <NewsFooterItem
           icon="access-time" 
-          text={t('news.date')}: {formatDate(item.date)}
+          text={formatDate(item.date)}
           color={colors.text.secondary}
         />
       </View>

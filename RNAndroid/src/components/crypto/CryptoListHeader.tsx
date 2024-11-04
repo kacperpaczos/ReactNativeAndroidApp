@@ -1,9 +1,9 @@
 import React, { useCallback, useEffect } from 'react';
 import { View, StyleSheet } from 'react-native';
 import { useTheme } from '@/hooks/useTheme';
+import { useLanguage } from '@/contexts/LanguageContext';
 import { SearchBar } from './SearchBar';
 import { SortButtons } from './SortButtons';
-import { useTranslation } from 'react-i18next';
 
 interface CryptoListHeaderProps {
   onSearch: (text: string) => void;
@@ -13,14 +13,6 @@ interface CryptoListHeaderProps {
   defaultSearchValue?: string;
 }
 
-const SORT_OPTIONS = [
-  { id: 'rank', label: 'Ranking' },
-  { id: 'price_usd', label: 'Cena' },
-  { id: 'market_cap_usd', label: 'Kapitalizacja' },
-  { id: 'volume_24h_usd', label: 'Wolumen 24h' },
-  { id: 'percent_change_24h', label: 'Zmiana 24h' }
-];
-
 export const CryptoListHeader: React.FC<CryptoListHeaderProps> = ({
   onSearch,
   onSort,
@@ -29,7 +21,15 @@ export const CryptoListHeader: React.FC<CryptoListHeaderProps> = ({
   defaultSearchValue = ''
 }) => {
   const { colors, themeVersion } = useTheme();
-  const { t } = useTranslation();
+  const { translations } = useLanguage();
+
+  const SORT_OPTIONS = [
+    { id: 'rank', field: 'rank', label: translations.crypto.filters.options.rank },
+    { id: 'price_usd', field: 'price_usd', label: translations.crypto.filters.options.price },
+    { id: 'market_cap_usd', field: 'market_cap_usd', label: translations.crypto.filters.options.marketCap },
+    { id: 'volume_24h_usd', field: 'volume_24h_usd', label: translations.crypto.filters.options.volume },
+    { id: 'percent_change_24h', field: 'percent_change_24h', label: translations.crypto.filters.options.change }
+  ];
 
   useEffect(() => {
     console.log('CryptoListHeader - zmiana motywu, themeVersion:', themeVersion);
@@ -38,14 +38,6 @@ export const CryptoListHeader: React.FC<CryptoListHeaderProps> = ({
   const handleSearch = useCallback((text: string) => {
     onSearch(text);
   }, [onSearch]);
-
-  const columns = [
-    { id: 'rank', label: t('sorting.rank') },
-    { id: 'price_usd', label: t('sorting.price_usd') },
-    { id: 'market_cap_usd', label: t('sorting.market_cap_usd') },
-    { id: 'volume_24h_usd', label: t('sorting.volume_24h_usd') },
-    { id: 'percent_change_24h', label: t('sorting.percent_change_24h') }
-  ];
 
   return (
     <View style={[styles.container, { backgroundColor: colors.background.secondary }]}>
@@ -69,24 +61,6 @@ export const CryptoListHeader: React.FC<CryptoListHeaderProps> = ({
 const styles = StyleSheet.create({
   container: {
     padding: 16,
-    borderBottomWidth: 1,
-  },
-  searchContainer: {
-    marginBottom: 12,
-  },
-  sortContainer: {
-    flexDirection: 'row',
-    flexWrap: 'wrap',
-    gap: 8,
-  },
-  sortButton: {
-    paddingHorizontal: 12,
-    paddingVertical: 6,
-    borderRadius: 16,
-    borderWidth: 1,
-  },
-  sortButtonText: {
-    fontSize: 14,
-    fontWeight: '500',
+    marginBottom: 8,
   }
 });

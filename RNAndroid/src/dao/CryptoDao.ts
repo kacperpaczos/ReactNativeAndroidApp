@@ -31,6 +31,11 @@ export class CryptoDao {
     await this.refreshCacheIfNeeded();
     let coins = Array.from(this.cache.values());
 
+    // Usuwanie duplikatów
+    coins = coins.filter((coin, index, self) =>
+      index === self.findIndex((c) => c.id === coin.id)
+    );
+
     // Filtrowanie
     if (options?.search) {
       const searchLower = options.search.toLowerCase();
@@ -51,11 +56,11 @@ export class CryptoDao {
         switch (options.sortBy) {
           case 'rank':
             return (a.rank - b.rank) * direction;
-          case 'price':
+          case 'price_usd':
             return ((a.quotes?.USD?.price || 0) - (b.quotes?.USD?.price || 0)) * direction;
-          case 'market_cap':
+          case 'market_cap_usd':
             return ((a.quotes?.USD?.market_cap || 0) - (b.quotes?.USD?.market_cap || 0)) * direction;
-          case 'volume_24h':
+          case 'volume_24h_usd':
             return ((a.quotes?.USD?.volume_24h || 0) - (b.quotes?.USD?.volume_24h || 0)) * direction;
           case 'percent_change_24h':
             return ((a.quotes?.USD?.percent_change_24h || 0) - (b.quotes?.USD?.percent_change_24h || 0)) * direction;

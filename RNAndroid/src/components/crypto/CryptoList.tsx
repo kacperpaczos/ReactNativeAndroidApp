@@ -70,7 +70,7 @@ export const CryptoList: React.FC = () => {
         renderItem={({ item }) => (
           <CryptoListItem asset={item} currentSortBy={sortBy} />
         )}
-        keyExtractor={item => item.id.toString()}
+        keyExtractor={item => `${item.id}-${item.symbol}-${item.rank}`}
         onEndReached={handleLoadMore}
         onEndReachedThreshold={0.5}
         refreshControl={

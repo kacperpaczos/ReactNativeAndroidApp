@@ -20,24 +20,39 @@ const en: TranslationKeys = {
     details: 'Cryptocurrency Details',
     back: 'Back',
     category: 'Category',
-    chart: 'Chart'
+    chart: 'Chart',
+    filters: {
+      sortBy: 'Sort by',
+      options: {
+        rank: 'Rank',
+        price: 'Price',
+        marketCap: 'Market Cap',
+        volume: 'Volume',
+        change: 'Change'
+      },
+      direction: {
+        asc: 'Ascending',
+        desc: 'Descending'
+      }
+    }
   },
   settings: {
     title: 'Settings',
+    theme: {
+      title: 'App Theme',
+      notice: 'Theme change affects entire app appearance',
+      light: 'Light',
+      dark: 'Dark',
+      system: 'System'
+    },
     language: {
-      title: 'Language',
+      title: 'App Language',
       pl: 'Polish',
       en: 'English'
     },
-    theme: {
-      title: 'Theme',
-      light: 'Light',
-      dark: 'Dark',
-      system: 'System',
-      notice: 'Theme change requires app restart'
-    },
     notifications: 'Notifications',
-    welcomeScreen: 'Welcome Screen'
+    welcomeScreen: 'Welcome Screen',
+    version: 'Version'
   },
   news: {
     title: 'News',
@@ -48,25 +63,27 @@ const en: TranslationKeys = {
     date: 'Date'
   },
   welcome: {
-    title: 'Welcome to CryptoNews!',
-    description: 'Track current cryptocurrency prices and latest crypto market news in one place.'
+    title: 'Welcome to CryptoNews',
+    subtitle: 'Track cryptocurrencies and stay updated with the latest news',
+    start: 'Get Started'
   },
-  modals: {
+  modal: {
+    close: 'Close',
     appInfo: {
       title: 'About CryptoNews',
       description: 'Your comprehensive cryptocurrency tracking and news application',
       features: {
         prices: {
-          title: 'Current Prices',
-          description: 'Track cryptocurrency prices in real-time'
+          title: 'Real-time Prices',
+          description: 'Track cryptocurrency prices live'
         },
         news: {
           title: 'News',
-          description: 'Latest updates from the crypto world'
+          description: 'Latest crypto world updates'
         },
         notifications: {
           title: 'Notifications',
-          description: 'Receive alerts about important changes'
+          description: 'Get alerts on important changes'
         }
       }
     },
@@ -82,16 +99,12 @@ const en: TranslationKeys = {
       }
     }
   },
-  sorting: {
-    rank: 'Rank',
-    price_usd: 'Price',
-    market_cap_usd: 'Market Cap',
-    volume_24h_usd: '24h Volume',
-    percent_change_24h: '24h Change'
-  },
-  cryptoDetails: {
-    marketCap: 'Market Cap',
-    volume24h: 'Volume (24h)'
+  navigation: {
+    tabs: {
+      crypto: 'Cryptocurrencies',
+      news: 'News',
+      settings: 'Settings'
+    }
   }
 };
 

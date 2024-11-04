@@ -39,7 +39,13 @@ export const CryptoProvider: React.FC<{ children: React.ReactNode }> = ({ childr
     setError(null);
 
     try {
-      const data = await cryptoDao.getCoins(options);
+      const validatedOptions = {
+        ...options,
+        sortDirection: options.sortDirection || 'asc',
+        sortBy: options.sortBy || 'rank'
+      };
+
+      const data = await cryptoDao.getCoins(validatedOptions);
       const newAssets = Array.isArray(data) ? data : [];
       
       setAssets(prev => options.page === 1 ? newAssets : [...prev, ...newAssets]);

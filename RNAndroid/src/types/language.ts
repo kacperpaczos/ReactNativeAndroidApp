@@ -21,6 +21,20 @@ export interface TranslationKeys {
     back: string;
     category: string;
     chart: string;
+    filters: {
+      sortBy: string;
+      options: {
+        rank: string;
+        price: string;
+        marketCap: string;
+        volume: string;
+        change: string;
+      };
+      direction: {
+        asc: string;
+        desc: string;
+      };
+    };
   };
   settings: {
     title: string;
@@ -53,7 +67,8 @@ export interface TranslationKeys {
     subtitle: string;
     start: string;
   };
-  modals: {
+  modal: {
+    close: string;
     appInfo: {
       title: string;
       description: string;
@@ -82,6 +97,13 @@ export interface TranslationKeys {
         security: string;
         global: string;
       };
+    };
+  };
+  navigation: {
+    tabs: {
+      crypto: string;
+      news: string;
+      settings: string;
     };
   };
 }

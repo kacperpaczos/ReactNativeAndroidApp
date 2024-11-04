@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Text, StyleSheet, TouchableOpacity, Linking } from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 
 interface NewsItemProps {
@@ -8,20 +8,13 @@ interface NewsItemProps {
   summary: string;
   date: string;
   source: string;
-  url: string;
 }
 
-export const NewsItem: React.FC<NewsItemProps> = ({ id, title, summary, date, source, url }) => {
+export const NewsItem: React.FC<NewsItemProps> = ({ id, title, summary, date, source }) => {
   const navigation = useNavigation();
 
-  const handlePress = async () => {
-    if (url) {
-      try {
-        await Linking.openURL(url);
-      } catch (error) {
-        console.error('Błąd podczas otwierania URL:', error);
-      }
-    }
+  const handlePress = () => {
+    navigation.navigate('NewsDetails', { id });
   };
 
   return (

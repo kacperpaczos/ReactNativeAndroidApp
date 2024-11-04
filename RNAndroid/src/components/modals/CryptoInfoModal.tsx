@@ -18,19 +18,19 @@ export const CryptoInfoModal: React.FC = () => {
       <div className="fixed inset-0 flex items-center justify-center p-4">
         <Dialog.Panel className="mx-auto max-w-md rounded bg-white p-6">
           <Dialog.Title className="text-xl font-bold mb-4">
-            {translations.modals.cryptoInfo.title}
+            {translations.modal.cryptoInfo.title}
           </Dialog.Title>
           
           <div className="space-y-4">
-            <p>{translations.modals.cryptoInfo.description}</p>
+            <p>{translations.modal.cryptoInfo.description}</p>
             
             <div className="font-medium">
-              <h3 className="text-lg mb-2">{translations.modals.cryptoInfo.features.title}</h3>
+              <h3 className="text-lg mb-2">{translations.modal.cryptoInfo.features.title}</h3>
               <ul className="list-disc pl-5 space-y-1">
-                <li>{translations.modals.cryptoInfo.features.decentralized}</li>
-                <li>{translations.modals.cryptoInfo.features.blockchain}</li>
-                <li>{translations.modals.cryptoInfo.features.security}</li>
-                <li>{translations.modals.cryptoInfo.features.global}</li>
+                <li>{translations.modal.cryptoInfo.features.decentralized}</li>
+                <li>{translations.modal.cryptoInfo.features.blockchain}</li>
+                <li>{translations.modal.cryptoInfo.features.security}</li>
+                <li>{translations.modal.cryptoInfo.features.global}</li>
               </ul>
             </div>
           </div>

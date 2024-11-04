@@ -20,7 +20,21 @@ const pl: TranslationKeys = {
     details: 'Szczegóły kryptowaluty',
     back: 'Wstecz',
     category: 'Kategoria',
-    chart: 'Wykres'
+    chart: 'Wykres',
+    filters: {
+      sortBy: 'Sortuj według',
+      options: {
+        rank: 'Ranking',
+        price: 'Cena',
+        marketCap: 'Kapitalizacja',
+        volume: 'Wolumen',
+        change: 'Zmiana'
+      },
+      direction: {
+        asc: 'Rosnąco',
+        desc: 'Malejąco'
+      }
+    }
   },
   settings: {
     title: 'Ustawienia',
@@ -43,16 +57,18 @@ const pl: TranslationKeys = {
   news: {
     title: 'Wiadomości',
     loadError: 'Nie udało się załadować wiadomości',
-    empty: 'Brak dostępnych wiadomo��ci',
+    empty: 'Brak dostępnych wiadomości',
     readMore: 'Czytaj więcej',
     source: 'Źródło',
     date: 'Data'
   },
   welcome: {
-    title: 'Witaj w CryptoNews!',
-    description: 'Śledź aktualne ceny kryptowalut oraz najnowsze wiadomości z rynku crypto w jednym miejscu.'
+    title: 'Witaj w CryptoNews',
+    subtitle: 'Śledź kryptowaluty i bądź na bieżąco z najnowszymi wiadomościami',
+    start: 'Rozpocznij'
   },
-  modals: {
+  modal: {
+    close: 'Zamknij',
     appInfo: {
       title: 'O aplikacji CryptoNews',
       description: 'CryptoNews to kompleksowe narzędzie do śledzenia rynku kryptowalut.',
@@ -83,16 +99,12 @@ const pl: TranslationKeys = {
       }
     }
   },
-  sorting: {
-    rank: 'Ranking',
-    price_usd: 'Cena',
-    market_cap_usd: 'Kapitalizacja',
-    volume_24h_usd: 'Wolumen 24h',
-    percent_change_24h: 'Zmiana 24h'
-  },
-  cryptoDetails: {
-    marketCap: 'Kapitalizacja rynkowa',
-    volume24h: 'Wolumen (24h)'
+  navigation: {
+    tabs: {
+      crypto: 'Kryptowaluty',
+      news: 'Wiadomości',
+      settings: 'Ustawienia'
+    }
   }
 };
 

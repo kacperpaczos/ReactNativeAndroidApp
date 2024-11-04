@@ -13,11 +13,11 @@ export const AppInfoModal = () => {
 
   if (!isAppInfoModalVisible) return null;
 
-  if (!translations?.modals?.appInfo?.title || 
-      !translations?.modals?.appInfo?.description || 
-      !translations?.modals?.appInfo?.features?.prices?.title ||
-      !translations?.modals?.appInfo?.features?.news?.title ||
-      !translations?.modals?.appInfo?.features?.notifications?.title) {
+  if (!translations?.modal?.appInfo?.title || 
+      !translations?.modal?.appInfo?.description || 
+      !translations?.modal?.appInfo?.features?.prices?.title ||
+      !translations?.modal?.appInfo?.features?.news?.title ||
+      !translations?.modal?.appInfo?.features?.notifications?.title) {
     console.error('Brak wymaganych tłumaczeń dla modalu AppInfo');
     return null;
   }
@@ -47,7 +47,7 @@ export const AppInfoModal = () => {
         >
           <View style={styles.header}>
             <Text style={[styles.title, { color: colors.text.primary }]}>
-              {translations.modals.appInfo.title}
+              {translations.modal.appInfo.title}
             </Text>
             <Pressable onPress={handleClose}>
               <MaterialIcons name="close" size={24} color={colors.text.secondary} />
@@ -55,26 +55,26 @@ export const AppInfoModal = () => {
           </View>
 
           <Text style={[styles.description, { color: colors.text.primary }]}>
-            {translations.modals.appInfo.description}
+            {translations.modal.appInfo.description}
           </Text>
 
           <View style={styles.features}>
             <FeatureItem
               icon="trending-up"
-              title={translations.modals.appInfo.features.prices.title}
-              description={translations.modals.appInfo.features.prices.description}
+              title={translations.modal.appInfo.features.prices.title}
+              description={translations.modal.appInfo.features.prices.description}
               colors={colors}
             />
             <FeatureItem
               icon="newspaper"
-              title={translations.modals.appInfo.features.news.title}
-              description={translations.modals.appInfo.features.news.description}
+              title={translations.modal.appInfo.features.news.title}
+              description={translations.modal.appInfo.features.news.description}
               colors={colors}
             />
             <FeatureItem
               icon="notifications"
-              title={translations.modals.appInfo.features.notifications.title}
-              description={translations.modals.appInfo.features.notifications.description}
+              title={translations.modal.appInfo.features.notifications.title}
+              description={translations.modal.appInfo.features.notifications.description}
               colors={colors}
             />
           </View>

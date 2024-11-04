@@ -23,7 +23,8 @@ export const SortButtons: React.FC<SortButtonsProps> = ({
 }) => {
   const handleSort = (sortBy: string) => {
     if (currentSortBy === sortBy) {
-      onSort(sortBy, currentSortDirection === 'asc' ? 'desc' : 'asc');
+      const newDirection = currentSortDirection === 'asc' ? 'desc' : 'asc';
+      onSort(sortBy, newDirection);
     } else {
       onSort(sortBy, 'asc');
     }

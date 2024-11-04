@@ -1,5 +1,31 @@
 # CryptoNews - Aplikacja do Śledzenia Kryptowalut
 
+## Zrealizowane zagadnienia projektowe
+
+1. Architektura aplikacji oparta na React Native (punkt 11)
+   - Wykorzystanie Context API do zarządzania stanem
+   - Implementacja wzorca Repository Pattern
+   - Zastosowanie Data Access Objects (DAO)
+
+2. Wielowątkowość aplikacji (punkt 16)
+   - Asynchroniczne pobieranie danych
+   - Równoległe przetwarzanie operacji w tle
+   - Optymalizacja wydajności poprzez cachowanie
+
+3. Baza danych (punkt 20)
+   - Implementacja SQLite poprzez DatabaseManager
+   - Wykorzystanie wzorca Repository do operacji na bazie
+   - System cachowania danych
+
+4. Aplikacja w architekturze klient-serwer (punkt 33)
+   - Komunikacja z API Coinpaprika
+   - Obsługa błędów sieciowych
+   - Zarządzanie stanem połączenia
+
+## Testowane na
+- Android 34 (API level 34)
+- Pixel 7 Pro (emulator)
+
 ## Dostępne Funkcje
 
 ### 🪙 Moduł Kryptowalut
@@ -19,19 +45,15 @@
 - Włączanie/wyłączanie ekranu powitalnego
 - Podstawowe ustawienia powiadomień
 
-## Planowane Funkcje
-
-### 🪙 Moduł Kryptowalut
-- Zaawansowane filtry i sortowanie
-- Możliwość dodawania kryptowalut do ulubionych
-- Szczegółowe analizy techniczne
-- Powiadomienia o zmianach cen
-
-### 📰 Centrum Wiadomości
-- Dodanie większej liczby źródeł wiadomości
-- Możliwość zapisywania artykułów do późniejszego przeczytania
-- Personalizacja feedu wiadomości
-- Pełne artykuły dostępne bezpośrednio w aplikacji
+## Technologie
+- React Native 0.72.6
+- TypeScript 5.0.4
+- Expo 49.0.0
+- SQLite 2.1.0
+- Axios 1.6.2
+- Material Icons
+- React Navigation 6.0
+- Moti (animacje)
 
 ## Wymagania Systemowe
 - Node.js (minimum wersja 14.0.0)
@@ -76,7 +98,6 @@ npm start
 ```
 
 ## Skrypty npm
-
 - `npm start` - uruchamia serwer deweloperski Expo
 - `npm run android` - uruchamia aplikację na Androidzie
 - `npm run ios` - uruchamia aplikację na iOS

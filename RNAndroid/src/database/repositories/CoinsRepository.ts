@@ -100,7 +100,7 @@ export class CoinsRepository extends BaseRepository {
       query += ` WHERE ${whereConditions.join(' AND ')}`;
     }
 
-    query += ` ORDER BY "${sortBy}" ${sortDirection}`;
+    query += ` ORDER BY ${sortBy.replace(/([A-Z])/g, '_$1').toLowerCase()} ${sortDirection}`;
     query += ` LIMIT ? OFFSET ?`;
     params.push(Number(limit), Number(offset));
 
